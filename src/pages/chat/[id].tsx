@@ -39,7 +39,6 @@ const ChatById: FC<Props> = () => {
       },
       updateQuery: (prev, { subscriptionData }: any) => {
         const newItem = subscriptionData?.data?.postCreated;
-        console.log(newItem, "newItem");
 
         return {
           listMessagesByChatUser: {
@@ -149,9 +148,9 @@ const ChatById: FC<Props> = () => {
           }
         `}
       >
-        {messages?.map((item) => (
+        {messages?.map((item, index) => (
           <AtomWrapper
-            key={item.id}
+            key={index}
             customCSS={css`
               padding: 10px 10px;
               display: grid;
@@ -162,7 +161,6 @@ const ChatById: FC<Props> = () => {
             `}
           >
             <AtomText
-              key={item.id}
               customCSS={css`
                 width: 100%;
                 overflow: hidden;
