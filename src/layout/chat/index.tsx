@@ -1,4 +1,5 @@
 import ComponentLayoutChats from "@/components/layout/chats";
+import { css } from "@emotion/react";
 import { AtomWrapper } from "lucy-nxtjs";
 import { FC, ReactNode } from "react";
 
@@ -15,9 +16,13 @@ const LayoutChat: FC<Props> = (props) => {
       flexWrap="nowrap"
       backgroundColor="#efefef"
       gap="2.5px"
+      customCSS={css`
+        display: grid;
+        grid-template-columns: 360px 1fr;
+      `}
     >
       <ComponentLayoutChats />
-      <AtomWrapper width="100%" height="100%" backgroundColor="white">
+      <AtomWrapper width="100%" height="100vh" backgroundColor="white">
         {props?.children}
       </AtomWrapper>
     </AtomWrapper>

@@ -9,10 +9,13 @@ export const QUERY_LIST_MESSAGES_BY_CHAT = gql`
         hasNextPage
       }
       items {
-        userId
-        conversationId
-        id
         message
+        conversationId
+        userId
+        user {
+          name
+        }
+        createdAt
       }
     }
   }

@@ -25,6 +25,7 @@
     "eslint": "8.32.0",
     "eslint-config-next": "13.1.4",
     "express": "^4.18.2",
+    "formik": "^2.2.9",
     "graphql-ws": "^5.11.2",
     "lucy-nxtjs": "^0.0.8",
     "mongoose": "^6.8.4",
@@ -35,6 +36,7 @@
     "tls": "^0.0.1",
     "typescript": "4.9.4",
     "uuid": "^9.0.0",
-    "ws": "^8.12.0"
+    "ws": "^8.12.0",
+    "yup": "^0.32.11"
   }
 }
