@@ -53,7 +53,7 @@ const ChatById: FC<Props> = () => {
                 user: null,
                 createdAt: newItem?.createdAt ?? Date.now(),
               },
-            ]?.reverse(),
+            ],
           },
         };
       },
