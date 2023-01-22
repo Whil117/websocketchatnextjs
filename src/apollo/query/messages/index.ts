@@ -15,6 +15,7 @@ export const QUERY_LIST_MESSAGES_BY_CHAT = gql`
         user {
           name
         }
+        id
         createdAt
       }
     }
