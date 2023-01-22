@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { QUERY_LIST_MESSAGES_BY_CHAT } from "@/apollo/query/messages";
+import { SUBSCRIBE_MESSAGE_CHAT } from "@/apollo/subscribe/chat";
 import { useQuery } from "@apollo/client";
-import { createClient } from "graphql-ws";
 import { AtomText, AtomWrapper } from "lucy-nxtjs";
 import { useRouter } from "next/router";
 import { FC, ReactNode, useEffect } from "react";
@@ -9,11 +9,6 @@ import { FC, ReactNode, useEffect } from "react";
 type Props = {
   children?: ReactNode;
 };
-
-const client = createClient({
-  // webSocketImpl: WebSocket,
-  url: "ws://localhost:4000/graphql",
-});
 
 const ChatById: FC<Props> = (props) => {
   const router = useRouter();
@@ -30,44 +25,20 @@ const ChatById: FC<Props> = (props) => {
   });
 
   useEffect(() => {
-    const EXE = async () => {
-      client.subscribe(
-        {
-          query: `subscription Subscription($input: InputSubscript) {
-    postCreated(input: $input) {
-      userId
-      user {
-        name
-        lastName
-        id
-        age
-      }
-      message
-      id
-      conversationId
-    }
-  }`,
-          variables: {
-            input: {
-              id: router?.query?.id,
-            },
-          },
+    subscribeToMore({
+      document: SUBSCRIBE_MESSAGE_CHAT,
+      variables: {
+        input: {
+          id: "307e712c-a61c-4baf-af0c-3710aa15a019",
         },
-        {
-          complete: () => {
-            console.log("AAAA");
-          },
-          next: function (value): void {
-            console.log(value);
-          },
-          error: function (error: unknown): void {
-            console.log(error);
-          },
-        }
-      );
-    };
-    EXE();
-  }, []);
+      },
+      updateQuery: (prev, { subscriptionData }: any) => {
+        console.log(subscriptionData);
+
+        return {};
+      },
+    });
+  }, [router?.query?.id]);
 
   return (
     <AtomWrapper>
