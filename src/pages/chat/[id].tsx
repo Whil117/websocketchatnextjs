@@ -190,6 +190,8 @@ const ChatById: FC<Props> = () => {
           onKeyUp={(event) => {
             event.stopPropagation();
             if (event.key === "Enter" && !event.shiftKey && !event.repeat) {
+              console.log("updating formik");
+
               formik.submitForm();
             }
           }}
