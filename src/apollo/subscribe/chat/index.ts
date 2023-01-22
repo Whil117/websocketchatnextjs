@@ -13,6 +13,7 @@ export const SUBSCRIBE_MESSAGE_CHAT = gql`
       message
       id
       conversationId
+      createdAt
     }
   }
 `;

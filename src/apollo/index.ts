@@ -9,7 +9,7 @@ export const isServer = typeof window !== `undefined`;
 const wsLink = isServer
   ? new GraphQLWsLink(
       createClient({
-        url: "ws://localhost:4000/graphql",
+        url: `${CONFIG.GRAPHQL_URL_WS}`,
       })
     )
   : null;

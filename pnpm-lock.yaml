@@ -19,7 +19,7 @@ specifiers:
   express: ^4.18.2
   formik: ^2.2.9
   graphql-ws: ^5.11.2
-  lucy-nxtjs: ^0.0.8
+  lucy-nxtjs: ^0.0.9
   mongoose: ^6.8.4
   net: ^1.0.2
   next: 13.1.4
@@ -50,7 +50,7 @@ dependencies:
   express: 4.18.2
   formik: 2.2.9_react@18.2.0
   graphql-ws: 5.11.2
-  lucy-nxtjs: 0.0.8_ru4tye4ca3my57w6lnmoshxuiu
+  lucy-nxtjs: 0.0.9_ru4tye4ca3my57w6lnmoshxuiu
   mongoose: 6.8.4
   net: 1.0.2
   next: 13.1.4_biqbaboplfbrettd7655fr4n2y
@@ -3894,8 +3894,8 @@ packages:
       yallist: 4.0.0
     dev: false
 
-  /lucy-nxtjs/0.0.8_ru4tye4ca3my57w6lnmoshxuiu:
-    resolution: {integrity: sha512-b29vWXclnI86iTQmm64TZRC8C79OIYb1KrE/x3Zj8iYWwunUZsWXPIGAZ/TTPm07/DDCbULcxlkL0HhNaPoQGQ==}
+  /lucy-nxtjs/0.0.9_ru4tye4ca3my57w6lnmoshxuiu:
+    resolution: {integrity: sha512-O1KeEW7aqmyaF2Z80jOZHvOocxhJrXufjSRcTxgkdL2A+SjgdA3nQAqTVA8yjbyMQiUnrSoSAFoQMCiHCyBLvA==}
     peerDependencies:
       '@emotion/react': ^11.10.5
       '@emotion/styled': ^11.10.5

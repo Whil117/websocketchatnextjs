@@ -39,6 +39,8 @@ const ChatById: FC<Props> = () => {
       },
       updateQuery: (prev, { subscriptionData }: any) => {
         const newItem = subscriptionData?.data?.postCreated;
+        console.log(newItem, "newItem");
+
         return {
           listMessagesByChatUser: {
             ...prev?.listMessagesByChatUser,
@@ -49,6 +51,8 @@ const ChatById: FC<Props> = () => {
                 id: newItem?.id,
                 message: newItem?.message,
                 userId: newItem?.userId,
+                user: null,
+                createdAt: newItem?.createdAt ?? Date.now(),
               },
             ]?.reverse(),
           },
@@ -109,13 +113,13 @@ const ChatById: FC<Props> = () => {
         flexDirection="row"
         flexWrap="nowrap"
         gap="5px"
-        backgroundColor="#f7f4f4"
+        backgroundColor="#f0f0f0"
       >
         <AtomImage
           src="https://picsum.photos/200/300"
-          width="50px"
-          height="50px"
-          borderRadius="50%"
+          width="45px"
+          height="45px"
+          borderRadius="10px"
         />
         <AtomText width="auto" fontWeight="bold" fontSize="16px">
           Whil García
@@ -153,7 +157,7 @@ const ChatById: FC<Props> = () => {
               display: grid;
               gap: 10px;
               &:hover {
-                background-color: #f7f4f4;
+                background-color: #f0f0f0;
               }
             `}
           >
