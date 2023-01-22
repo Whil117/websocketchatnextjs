@@ -149,9 +149,9 @@ const ChatById: FC<Props> = () => {
           }
         `}
       >
-        {messages?.map((item) => (
+        {messages?.map((item, index) => (
           <AtomWrapper
-            key={item?.createdAt}
+            key={index + item?.createdAt + item.message}
             customCSS={css`
               padding: 10px 10px;
               display: grid;
