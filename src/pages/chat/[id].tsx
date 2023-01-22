@@ -67,6 +67,7 @@ const ChatById: FC<Props> = () => {
       ),
     [data?.listMessagesByChatUser?.items]
   );
+  console.log(messages, "messages");
 
   const formik = useFormik({
     initialValues: {
@@ -150,7 +151,7 @@ const ChatById: FC<Props> = () => {
       >
         {messages?.map((item, index) => (
           <AtomWrapper
-            key={index}
+            key={index + item?.message + item?.createdAt}
             customCSS={css`
               padding: 10px 10px;
               display: grid;
