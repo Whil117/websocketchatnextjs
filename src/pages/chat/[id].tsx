@@ -2,7 +2,7 @@
 import { MUTATE_CREATE_MESSAGE_CHAT } from "@/apollo/mutate/chat";
 import { QUERY_LIST_MESSAGES_BY_CHAT } from "@/apollo/query/messages";
 import { SUBSCRIBE_MESSAGE_CHAT } from "@/apollo/subscribe/chat";
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation, useQuery, useSubscription } from "@apollo/client";
 import { css } from "@emotion/react";
 import { useFormik } from "formik";
 import { AtomImage, AtomInput, AtomText, AtomWrapper } from "lucy-nxtjs";
@@ -29,38 +29,43 @@ const ChatById: FC<Props> = () => {
 
   const [EXECUTE_CREATE_MESSAGE] = useMutation(MUTATE_CREATE_MESSAGE_CHAT);
 
-  useEffect(() => {
-    subscribeToMore({
-      document: SUBSCRIBE_MESSAGE_CHAT,
-      variables: {
-        input: {
-          id: "307e712c-a61c-4baf-af0c-3710aa15a019",
-        },
+  useSubscription(SUBSCRIBE_MESSAGE_CHAT, {
+    variables: {
+      input: {
+        id: "307e712c-a61c-4baf-af0c-3710aa15a019",
       },
-      updateQuery: (prev, { subscriptionData }: any) => {
-        const newItem = subscriptionData?.data?.postCreated;
-
-        console.log(newItem, "newItemnewItemnewItemnewItem");
-
-        return {
-          listMessagesByChatUser: {
-            ...prev?.listMessagesByChatUser,
-            items: [
-              ...prev?.listMessagesByChatUser?.items,
-              {
-                conversationId: newItem?.conversationId,
-                id: newItem?.id,
-                message: newItem?.message,
-                userId: newItem?.userId,
-                user: null,
-                createdAt: newItem?.createdAt ?? Date.now(),
-              },
-            ],
+    },
+    onData: () => {
+      subscribeToMore({
+        document: QUERY_LIST_MESSAGES_BY_CHAT,
+        variables: {
+          filter: {
+            take: 50,
+            page: 1,
+            conversationId: router?.query?.id,
           },
-        };
-      },
-    });
-  }, [router?.query?.id]);
+        },
+        updateQuery: (prev, { subscriptionData }: any) => {
+          if (!subscriptionData.data) return prev;
+          const newMessage = subscriptionData.data;
+
+          const result = Object.assign({}, prev, {
+            listMessagesByChatUser: {
+              ...prev.listMessagesByChatUser,
+              items: [
+                ...(prev?.listMessagesByChatUser?.messages ?? []),
+                ...(newMessage?.listMessagesByChatUser?.items ?? []),
+              ],
+            },
+          });
+
+          console.log(result, "result");
+
+          return result;
+        },
+      });
+    },
+  });
 
   const messages = useMemo(
     () =>
@@ -69,7 +74,6 @@ const ChatById: FC<Props> = () => {
       ),
     [data?.listMessagesByChatUser?.items]
   );
-  console.log(messages, "messages");
 
   const formik = useFormik({
     initialValues: {
