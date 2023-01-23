@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { MUTATE_CREATE_MESSAGE_CHAT } from "@/apollo/mutate/chat";
 import { QUERY_LIST_MESSAGES_BY_CHAT } from "@/apollo/query/messages";
@@ -6,6 +7,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import { css } from "@emotion/react";
 import { useFormik } from "formik";
 import {
+  AtomButton,
   AtomImage,
   AtomInput,
   AtomLoader,
@@ -61,12 +63,18 @@ const ChatById: FC<Props> = () => {
           createdAt: newMessage?.createdAt ?? Date.now(),
         };
 
-        const result = Object.assign({}, prev, {
-          listMessagesByChatUser: {
-            ...prev.listMessagesByChatUser,
-            items: [newIm, ...(prev?.listMessagesByChatUser?.items ?? [])],
-          },
-        });
+        const result =
+          page !== 1
+            ? Object.assign({}, prev, {
+                listMessagesByChatUser: {
+                  ...prev.listMessagesByChatUser,
+                  items: [
+                    newIm,
+                    ...(prev?.listMessagesByChatUser?.items ?? []),
+                  ],
+                },
+              })
+            : prev;
 
         return result;
       },
@@ -106,11 +114,9 @@ const ChatById: FC<Props> = () => {
 
   useEffect(() => {
     if (chatScroll.current) {
-      chatScroll.current.scrollTop = chatScroll.current.scrollHeight - 1;
+      chatScroll.current.scrollTop = chatScroll.current.scrollHeight - 5;
     }
-  }, [router?.query?.id, data?.listMessagesByChatUser?.items]);
-
-  console.log(data?.listMessagesByChatUser?.pageInfo?.hasPreviousPage);
+  }, [loading]);
 
   return (
     <AtomWrapper
@@ -144,7 +150,7 @@ const ChatById: FC<Props> = () => {
       </AtomWrapper>
       {loading ? (
         <AtomWrapper alignItems="center" justifyContent="center" height="100%">
-          <AtomLoader isLoading colorLoad="#0f97ff" type="medium" />
+          <AtomLoader isLoading colorLoad="#07deff" type="medium" />
         </AtomWrapper>
       ) : (
         <AtomWrapper
@@ -153,17 +159,17 @@ const ChatById: FC<Props> = () => {
             if (chatScroll.current) {
               const { scrollTop, clientHeight, scrollHeight } =
                 chatScroll.current;
-              if (chatScroll.current.scrollTop === 0) {
-                if (data?.listMessagesByChatUser?.pageInfo?.hasNextPage) {
+              if (data?.listMessagesByChatUser?.pageInfo?.hasNextPage) {
+                if (chatScroll.current.scrollTop === 0) {
                   setPage((prev) => prev + 1);
-                  console.log("hasNextPage");
-                  chatScroll.current.scrollTop = 0;
+                  // chatScroll.current.scrollTop =
+                  //   chatScroll.current.scrollHeight - 40;
                 }
-              } else if (scrollTop + clientHeight === scrollHeight) {
-                if (data?.listMessagesByChatUser?.pageInfo?.hasPreviousPage) {
+              }
+              if (data?.listMessagesByChatUser?.pageInfo?.hasPreviousPage) {
+                if (scrollTop + clientHeight === scrollHeight) {
                   setPage((prev) => prev - 1);
-                  console.log("hasPreviousPage");
-                  // chatScroll.current.scrollTop = 1;
+                  // chatScroll.current.scrollTop = 40;
                 }
               }
             }
@@ -190,7 +196,7 @@ const ChatById: FC<Props> = () => {
             }
           `}
         >
-          {messages?.map((item, index) => (
+          {messages?.map((item) => (
             <AtomWrapper
               key={item?.id}
               customCSS={css`
@@ -222,6 +228,34 @@ const ChatById: FC<Props> = () => {
           padding: 12px;
         `}
       >
+        {page !== 1 && (
+          <AtomButton
+            borderRadius="10px 10px 0px 0px"
+            width="100%"
+            margin="5px"
+            backgroundLinearGradient={{
+              rotate: "315deg",
+              secondary: "#07deff",
+              primary: "#0f97ff",
+            }}
+            whileHover={{
+              scale: 1,
+            }}
+            whileTap={{
+              scale: 0.99,
+            }}
+            onClick={() => {
+              setPage(1);
+              if (chatScroll.current) {
+                chatScroll.current.scrollTop =
+                  chatScroll.current.scrollHeight - 40;
+              }
+            }}
+          >
+            You're viewing older messages Jump To Present <br />
+            page {page}
+          </AtomButton>
+        )}
         <AtomInput
           type="textbox"
           id="message"
