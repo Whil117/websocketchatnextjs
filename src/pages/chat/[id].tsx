@@ -31,6 +31,7 @@ const ChatById: FC<Props> = () => {
     QUERY_LIST_MESSAGES_BY_CHAT,
     {
       skip: !router?.query?.id,
+      fetchPolicy: "cache-and-network",
       variables: {
         filter: {
           take: 50,
@@ -44,42 +45,40 @@ const ChatById: FC<Props> = () => {
   const [EXECUTE_CREATE_MESSAGE] = useMutation(MUTATE_CREATE_MESSAGE_CHAT);
 
   useEffect(() => {
-    subscribeToMore({
-      document: SUBSCRIBE_MESSAGE_CHAT,
-      variables: {
-        input: {
-          id: "307e712c-a61c-4baf-af0c-3710aa15a019",
+    if (page === 1) {
+      console.log("WEBSOCKET");
+
+      subscribeToMore({
+        document: SUBSCRIBE_MESSAGE_CHAT,
+        variables: {
+          input: {
+            id: "307e712c-a61c-4baf-af0c-3710aa15a019",
+          },
         },
-      },
-      updateQuery: (prev, { subscriptionData }: any) => {
-        if (!subscriptionData.data) return prev;
-        const newMessage = subscriptionData.data?.postCreated;
-        const newIm = {
-          conversationId: newMessage?.conversationId,
-          id: newMessage?.id,
-          message: newMessage?.message,
-          userId: newMessage?.userId,
-          user: null,
-          createdAt: newMessage?.createdAt ?? Date.now(),
-        };
+        updateQuery: (prev, { subscriptionData }: any) => {
+          if (!subscriptionData.data) return prev;
+          const newMessage = subscriptionData.data?.postCreated;
+          const newIm = {
+            conversationId: newMessage?.conversationId,
+            id: newMessage?.id,
+            message: newMessage?.message,
+            userId: newMessage?.userId,
+            user: null,
+            createdAt: newMessage?.createdAt ?? Date.now(),
+          };
 
-        const result =
-          page !== 1
-            ? Object.assign({}, prev, {
-                listMessagesByChatUser: {
-                  ...prev.listMessagesByChatUser,
-                  items: [
-                    newIm,
-                    ...(prev?.listMessagesByChatUser?.items ?? []),
-                  ],
-                },
-              })
-            : prev;
+          const result = Object.assign({}, prev, {
+            listMessagesByChatUser: {
+              ...prev.listMessagesByChatUser,
+              items: [newIm, ...(prev?.listMessagesByChatUser?.items ?? [])],
+            },
+          });
 
-        return result;
-      },
-    });
-  }, []);
+          return result;
+        },
+      });
+    }
+  }, [page]);
 
   const messages = useMemo(
     () =>
@@ -112,11 +111,11 @@ const ChatById: FC<Props> = () => {
 
   const chatScroll = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (chatScroll.current) {
-      chatScroll.current.scrollTop = chatScroll.current.scrollHeight - 5;
-    }
-  }, [loading]);
+  // useEffect(() => {
+  //   if (chatScroll.current) {
+  //     chatScroll.current.scrollTop = chatScroll.current.scrollHeight;
+  //   }
+  // }, [loading]);
 
   return (
     <AtomWrapper
