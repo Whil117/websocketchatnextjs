@@ -45,40 +45,36 @@ const ChatById: FC<Props> = () => {
   const [EXECUTE_CREATE_MESSAGE] = useMutation(MUTATE_CREATE_MESSAGE_CHAT);
 
   useEffect(() => {
-    if (page === 1) {
-      console.log("WEBSOCKET");
+    subscribeToMore({
+      document: SUBSCRIBE_MESSAGE_CHAT,
+      variables: {
+        input: {
+          id: "307e712c-a61c-4baf-af0c-3710aa15a019",
+        },
+      },
+      updateQuery: (prev, { subscriptionData }: any) => {
+        if (!subscriptionData.data) return prev;
+        const newMessage = subscriptionData.data?.postCreated;
+        const newIm = {
+          conversationId: newMessage?.conversationId,
+          id: newMessage?.id,
+          message: newMessage?.message,
+          userId: newMessage?.userId,
+          user: null,
+          createdAt: newMessage?.createdAt ?? Date.now(),
+        };
 
-      subscribeToMore({
-        document: SUBSCRIBE_MESSAGE_CHAT,
-        variables: {
-          input: {
-            id: "307e712c-a61c-4baf-af0c-3710aa15a019",
+        const result = Object.assign({}, prev, {
+          listMessagesByChatUser: {
+            ...prev.listMessagesByChatUser,
+            items: [newIm, ...(prev?.listMessagesByChatUser?.items ?? [])],
           },
-        },
-        updateQuery: (prev, { subscriptionData }: any) => {
-          if (!subscriptionData.data) return prev;
-          const newMessage = subscriptionData.data?.postCreated;
-          const newIm = {
-            conversationId: newMessage?.conversationId,
-            id: newMessage?.id,
-            message: newMessage?.message,
-            userId: newMessage?.userId,
-            user: null,
-            createdAt: newMessage?.createdAt ?? Date.now(),
-          };
+        });
 
-          const result = Object.assign({}, prev, {
-            listMessagesByChatUser: {
-              ...prev.listMessagesByChatUser,
-              items: [newIm, ...(prev?.listMessagesByChatUser?.items ?? [])],
-            },
-          });
-
-          return result;
-        },
-      });
-    }
-  }, [page]);
+        return result;
+      },
+    });
+  }, []);
 
   const messages = useMemo(
     () =>
