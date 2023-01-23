@@ -5,9 +5,15 @@ import { SUBSCRIBE_MESSAGE_CHAT } from "@/apollo/subscribe/chat";
 import { useMutation, useQuery } from "@apollo/client";
 import { css } from "@emotion/react";
 import { useFormik } from "formik";
-import { AtomImage, AtomInput, AtomText, AtomWrapper } from "lucy-nxtjs";
+import {
+  AtomImage,
+  AtomInput,
+  AtomLoader,
+  AtomText,
+  AtomWrapper,
+} from "lucy-nxtjs";
 import { useRouter } from "next/router";
-import { FC, ReactNode, useEffect, useMemo, useRef } from "react";
+import { FC, ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import * as Yup from "yup";
 
 type Props = {
@@ -17,16 +23,21 @@ type Props = {
 const ChatById: FC<Props> = () => {
   const router = useRouter();
 
-  const { data, subscribeToMore } = useQuery(QUERY_LIST_MESSAGES_BY_CHAT, {
-    skip: !router?.query?.id,
-    variables: {
-      filter: {
-        take: 50,
-        page: 1,
-        conversationId: router?.query?.id,
+  const [page, setPage] = useState(1);
+
+  const { data, subscribeToMore, loading } = useQuery(
+    QUERY_LIST_MESSAGES_BY_CHAT,
+    {
+      skip: !router?.query?.id,
+      variables: {
+        filter: {
+          take: 50,
+          page: page,
+          conversationId: router?.query?.id,
+        },
       },
-    },
-  });
+    }
+  );
 
   const [EXECUTE_CREATE_MESSAGE] = useMutation(MUTATE_CREATE_MESSAGE_CHAT);
 
@@ -95,9 +106,11 @@ const ChatById: FC<Props> = () => {
 
   useEffect(() => {
     if (chatScroll.current) {
-      chatScroll.current.scrollTop = chatScroll.current.scrollHeight;
+      chatScroll.current.scrollTop = chatScroll.current.scrollHeight - 1;
     }
   }, [router?.query?.id, data?.listMessagesByChatUser?.items]);
+
+  console.log(data?.listMessagesByChatUser?.pageInfo?.hasPreviousPage);
 
   return (
     <AtomWrapper
@@ -129,56 +142,81 @@ const ChatById: FC<Props> = () => {
           Whil García
         </AtomText>
       </AtomWrapper>
-      <AtomWrapper
-        ref={chatScroll}
-        customCSS={css`
-          height: 100%;
-          overflow: hidden;
-          overflow-x: hidden;
-          overflow-y: scroll;
-          flex-direction: column;
-          flex-wrap: nowrap;
-          padding: 12px;
-          ::-webkit-scrollbar {
-            width: 8px;
-          }
-
-          ::-webkit-scrollbar-thumb {
-            background: #ccc;
-            border-radius: 4px;
-          }
-          ::-webkit-scrollbar-thumb:hover {
-            background: #b3b3b3;
-            box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.2);
-          }
-        `}
-      >
-        {messages?.map((item, index) => (
-          <AtomWrapper
-            key={item?.id}
-            customCSS={css`
-              padding: 10px 10px;
-              display: grid;
-              gap: 10px;
-              &:hover {
-                background-color: #f0f0f0;
+      {loading ? (
+        <AtomWrapper alignItems="center" justifyContent="center" height="100%">
+          <AtomLoader isLoading colorLoad="#0f97ff" type="medium" />
+        </AtomWrapper>
+      ) : (
+        <AtomWrapper
+          ref={chatScroll}
+          onScroll={() => {
+            if (chatScroll.current) {
+              const { scrollTop, clientHeight, scrollHeight } =
+                chatScroll.current;
+              if (chatScroll.current.scrollTop === 0) {
+                if (data?.listMessagesByChatUser?.pageInfo?.hasNextPage) {
+                  setPage((prev) => prev + 1);
+                  console.log("hasNextPage");
+                  chatScroll.current.scrollTop = 0;
+                }
+              } else if (scrollTop + clientHeight === scrollHeight) {
+                if (data?.listMessagesByChatUser?.pageInfo?.hasPreviousPage) {
+                  setPage((prev) => prev - 1);
+                  console.log("hasPreviousPage");
+                  // chatScroll.current.scrollTop = 1;
+                }
               }
-            `}
-          >
-            <AtomText
+            }
+          }}
+          customCSS={css`
+            height: 100%;
+            overflow: hidden;
+            overflow-x: hidden;
+            overflow-y: scroll;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            padding: 12px;
+            ::-webkit-scrollbar {
+              width: 8px;
+            }
+
+            ::-webkit-scrollbar-thumb {
+              background: #ccc;
+              border-radius: 4px;
+            }
+            ::-webkit-scrollbar-thumb:hover {
+              background: #b3b3b3;
+              box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.2);
+            }
+          `}
+        >
+          {messages?.map((item, index) => (
+            <AtomWrapper
+              key={item?.id}
               customCSS={css`
-                width: 100%;
-                overflow: hidden;
-                text-overflow: Ellipsis;
-                word-wrap: break-word;
-                cursor: text;
+                padding: 10px 10px;
+                display: grid;
+                gap: 10px;
+                &:hover {
+                  background-color: #f0f0f0;
+                }
               `}
             >
-              {item.message}
-            </AtomText>
-          </AtomWrapper>
-        ))}
-      </AtomWrapper>
+              <AtomText
+                customCSS={css`
+                  width: 100%;
+                  overflow: hidden;
+                  text-overflow: Ellipsis;
+                  word-wrap: break-word;
+                  cursor: text;
+                `}
+              >
+                {item.message}
+              </AtomText>
+            </AtomWrapper>
+          ))}
+        </AtomWrapper>
+      )}
       <AtomWrapper
         customCSS={css`
           padding: 12px;
