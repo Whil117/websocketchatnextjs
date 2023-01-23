@@ -2,12 +2,13 @@
 import { MUTATE_CREATE_MESSAGE_CHAT } from "@/apollo/mutate/chat";
 import { QUERY_LIST_MESSAGES_BY_CHAT } from "@/apollo/query/messages";
 import { SUBSCRIBE_MESSAGE_CHAT } from "@/apollo/subscribe/chat";
-import { useMutation, useQuery, useSubscription } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { css } from "@emotion/react";
 import { useFormik } from "formik";
 import { AtomImage, AtomInput, AtomText, AtomWrapper } from "lucy-nxtjs";
 import { useRouter } from "next/router";
 import { FC, ReactNode, useEffect, useMemo, useRef } from "react";
+import * as Yup from "yup";
 
 type Props = {
   children?: ReactNode;
@@ -29,43 +30,37 @@ const ChatById: FC<Props> = () => {
 
   const [EXECUTE_CREATE_MESSAGE] = useMutation(MUTATE_CREATE_MESSAGE_CHAT);
 
-  useSubscription(SUBSCRIBE_MESSAGE_CHAT, {
-    variables: {
-      input: {
-        id: "307e712c-a61c-4baf-af0c-3710aa15a019",
+  useEffect(() => {
+    subscribeToMore({
+      document: SUBSCRIBE_MESSAGE_CHAT,
+      variables: {
+        input: {
+          id: "307e712c-a61c-4baf-af0c-3710aa15a019",
+        },
       },
-    },
-    onData: () => {
-      subscribeToMore({
-        document: QUERY_LIST_MESSAGES_BY_CHAT,
-        variables: {
-          filter: {
-            take: 50,
-            page: 1,
-            conversationId: router?.query?.id,
+      updateQuery: (prev, { subscriptionData }: any) => {
+        if (!subscriptionData.data) return prev;
+        const newMessage = subscriptionData.data?.postCreated;
+        const newIm = {
+          conversationId: newMessage?.conversationId,
+          id: newMessage?.id,
+          message: newMessage?.message,
+          userId: newMessage?.userId,
+          user: null,
+          createdAt: newMessage?.createdAt ?? Date.now(),
+        };
+
+        const result = Object.assign({}, prev, {
+          listMessagesByChatUser: {
+            ...prev.listMessagesByChatUser,
+            items: [newIm, ...(prev?.listMessagesByChatUser?.items ?? [])],
           },
-        },
-        updateQuery: (prev, { subscriptionData }: any) => {
-          if (!subscriptionData.data) return prev;
-          const newMessage = subscriptionData.data;
+        });
 
-          const result = Object.assign({}, prev, {
-            listMessagesByChatUser: {
-              ...prev.listMessagesByChatUser,
-              items: [
-                ...(prev?.listMessagesByChatUser?.messages ?? []),
-                ...(newMessage?.listMessagesByChatUser?.items ?? []),
-              ],
-            },
-          });
-
-          console.log(result, "result");
-
-          return result;
-        },
-      });
-    },
-  });
+        return result;
+      },
+    });
+  }, []);
 
   const messages = useMemo(
     () =>
@@ -79,6 +74,9 @@ const ChatById: FC<Props> = () => {
     initialValues: {
       message: "",
     },
+    validationSchema: Yup.object({
+      message: Yup.string().required(),
+    }),
     onSubmit: (values, { resetForm }) => {
       EXECUTE_CREATE_MESSAGE({
         variables: {
@@ -194,8 +192,6 @@ const ChatById: FC<Props> = () => {
           onKeyUp={(event) => {
             event.stopPropagation();
             if (event.key === "Enter" && !event.shiftKey && !event.repeat) {
-              console.log("updating formik");
-
               formik.submitForm();
             }
           }}
