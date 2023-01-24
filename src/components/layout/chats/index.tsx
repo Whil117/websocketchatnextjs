@@ -22,6 +22,11 @@ const ComponentLayoutChats: FC<Props> = (props) => {
       backgroundColor="white"
       padding="20px"
       gap="10px"
+      customCSS={css`
+        @media (max-width: 980px) {
+          display: none;
+        }
+      `}
     >
       <AtomWrapper
         flexDirection="row"
