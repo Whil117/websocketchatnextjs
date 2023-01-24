@@ -107,11 +107,13 @@ const ChatById: FC<Props> = () => {
 
   const chatScroll = useRef<HTMLDivElement>(null);
 
-  // useEffect(() => {
-  //   if (chatScroll.current) {
-  //     chatScroll.current.scrollTop = chatScroll.current.scrollHeight;
-  //   }
-  // }, [loading]);
+  useEffect(() => {
+    if (chatScroll.current && page === 1) {
+      chatScroll.current.scrollTop = chatScroll.current.scrollHeight;
+    }
+  }, [messages, page]);
+
+  console.log(data?.listMessagesByChatUser?.pageInfo);
 
   return (
     <AtomWrapper
@@ -157,14 +159,17 @@ const ChatById: FC<Props> = () => {
               if (data?.listMessagesByChatUser?.pageInfo?.hasNextPage) {
                 if (chatScroll.current.scrollTop === 0) {
                   setPage((prev) => prev + 1);
-                  // chatScroll.current.scrollTop =
-                  //   chatScroll.current.scrollHeight - 40;
+                  chatScroll.current.scrollTop =
+                    chatScroll.current.scrollHeight - scrollHeight - 5;
                 }
               }
               if (data?.listMessagesByChatUser?.pageInfo?.hasPreviousPage) {
+                console.log(scrollTop + clientHeight + 1 === scrollHeight);
+
                 if (scrollTop + clientHeight === scrollHeight) {
                   setPage((prev) => prev - 1);
-                  // chatScroll.current.scrollTop = 40;
+                  console.log("SCROLLING");
+                  chatScroll.current.scrollTop = 5;
                 }
               }
             }
