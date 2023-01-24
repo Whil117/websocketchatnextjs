@@ -113,8 +113,6 @@ const ChatById: FC<Props> = () => {
     }
   }, [messages, page]);
 
-  console.log(data?.listMessagesByChatUser?.pageInfo);
-
   return (
     <AtomWrapper
       customCSS={css`
@@ -156,20 +154,19 @@ const ChatById: FC<Props> = () => {
             if (chatScroll.current) {
               const { scrollTop, clientHeight, scrollHeight } =
                 chatScroll.current;
+
+              const scrollDown = scrollTop + clientHeight + scrollHeight;
+
               if (data?.listMessagesByChatUser?.pageInfo?.hasNextPage) {
                 if (chatScroll.current.scrollTop === 0) {
                   setPage((prev) => prev + 1);
-                  chatScroll.current.scrollTop =
-                    chatScroll.current.scrollHeight - scrollHeight - 5;
+                  chatScroll.current.scrollTop = scrollDown;
                 }
               }
               if (data?.listMessagesByChatUser?.pageInfo?.hasPreviousPage) {
-                console.log(scrollTop + clientHeight + 1 === scrollHeight);
-
-                if (scrollTop + clientHeight === scrollHeight) {
+                if (scrollTop + clientHeight >= scrollHeight - 10) {
                   setPage((prev) => prev - 1);
-                  console.log("SCROLLING");
-                  chatScroll.current.scrollTop = 5;
+                  chatScroll.current.scrollTop = 10;
                 }
               }
             }
@@ -207,6 +204,7 @@ const ChatById: FC<Props> = () => {
                   background-color: #f0f0f0;
                 }
               `}
+              minHeight="220px"
             >
               <AtomText
                 customCSS={css`
