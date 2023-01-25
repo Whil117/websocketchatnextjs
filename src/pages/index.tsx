@@ -1,7 +1,8 @@
 import { css } from "@emotion/react";
 import { AtomIcon, AtomText, AtomWrapper } from "lucy-nxtjs";
+import { NextPageFC } from "next";
 
-export default function Home() {
+const Home: NextPageFC = () => {
   return (
     <AtomWrapper alignItems="center" height="100%" justifyContent="center">
       <AtomIcon
@@ -20,4 +21,6 @@ export default function Home() {
       </AtomText>
     </AtomWrapper>
   );
-}
+};
+Home.type = "chat";
+export default Home;

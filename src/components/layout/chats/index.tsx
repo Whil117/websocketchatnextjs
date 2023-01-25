@@ -17,9 +17,8 @@ const ComponentLayoutChats: FC<Props> = (props) => {
   const router = useRouter();
   return (
     <AtomWrapper
-      // height="100%"
       width="320px"
-      backgroundColor="white"
+      backgroundColor="var(--background-color-secondary)"
       padding="20px"
       gap="10px"
       customCSS={css`

@@ -14,7 +14,7 @@ const LayoutChat: FC<Props> = (props) => {
       height="100vh"
       flexDirection="row"
       flexWrap="nowrap"
-      backgroundColor="#efefef"
+      backgroundColor="#424242"
       gap="2.5px"
       customCSS={css`
         display: grid;
@@ -25,7 +25,11 @@ const LayoutChat: FC<Props> = (props) => {
       `}
     >
       <ComponentLayoutChats />
-      <AtomWrapper width="100%" height="100vh" backgroundColor="white">
+      <AtomWrapper
+        width="100%"
+        height="100vh"
+        backgroundColor="var(--background-color-secondary)"
+      >
         {props?.children}
       </AtomWrapper>
     </AtomWrapper>

@@ -1,16 +1,17 @@
 import client from "@/apollo";
-import LayoutChat from "@/layout/chat";
+import LayoutFC from "@/layout";
 import "@/styles/fonts.css";
 import "@/styles/globals.css";
+import "@/styles/normalize.css";
 import { ApolloProvider } from "@apollo/client";
-import type { AppProps } from "next/app";
+import type { AppPropsWithLayout } from "next/app";
 
-export default function App({ Component, pageProps }: AppProps) {
+export default function App({ Component, pageProps }: AppPropsWithLayout) {
   return (
-    <LayoutChat>
-      <ApolloProvider client={client}>
+    <ApolloProvider client={client}>
+      <LayoutFC type={Component.type}>
         <Component {...pageProps} />
-      </ApolloProvider>
-    </LayoutChat>
+      </LayoutFC>
+    </ApolloProvider>
   );
 }

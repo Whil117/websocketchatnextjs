@@ -14,15 +14,16 @@ import {
   AtomText,
   AtomWrapper,
 } from "lucy-nxtjs";
+import { NextPageFC } from "next";
 import { useRouter } from "next/router";
-import { FC, ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import { ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import * as Yup from "yup";
 
 type Props = {
   children?: ReactNode;
 };
 
-const ChatById: FC<Props> = () => {
+const ChatById: NextPageFC = () => {
   const router = useRouter();
 
   const [page, setPage] = useState(1);
@@ -131,7 +132,7 @@ const ChatById: FC<Props> = () => {
         flexDirection="row"
         flexWrap="nowrap"
         gap="5px"
-        backgroundColor="#f0f0f0"
+        backgroundColor="var(--background-color-secondary)"
       >
         <AtomImage
           src="https://picsum.photos/200/300"
@@ -160,13 +161,15 @@ const ChatById: FC<Props> = () => {
               if (data?.listMessagesByChatUser?.pageInfo?.hasNextPage) {
                 if (chatScroll.current.scrollTop === 0) {
                   setPage((prev) => prev + 1);
-                  chatScroll.current.scrollTop = scrollDown;
+                  // chatScroll.current.scrollTop = scrollDown - 10;
                 }
               }
+
               if (data?.listMessagesByChatUser?.pageInfo?.hasPreviousPage) {
-                if (scrollTop + clientHeight >= scrollHeight - 10) {
+                if (scrollTop + clientHeight === scrollHeight) {
                   setPage((prev) => prev - 1);
-                  chatScroll.current.scrollTop = 10;
+                  // chatScroll.current.scrollTop = 10;
+                  // console.log(chatScroll.current.scrollTop);
                 }
               }
             }
@@ -201,7 +204,7 @@ const ChatById: FC<Props> = () => {
                 display: grid;
                 gap: 10px;
                 &:hover {
-                  background-color: #f0f0f0;
+                  background-color: var(--background-color-tertiary);
                 }
               `}
               minHeight="220px"
@@ -286,5 +289,6 @@ const ChatById: FC<Props> = () => {
     </AtomWrapper>
   );
 };
+ChatById.type = "chat";
 
 export default ChatById;
