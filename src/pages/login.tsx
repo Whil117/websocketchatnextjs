@@ -1,20 +1,40 @@
 /* eslint-disable react/no-unescaped-entities */
+import { MUTATE_LOGIN_USER } from "@/apollo/mutate/user";
 import exportReduceWithAtom from "@/jotai/reducers/user";
+import { IMutationFilter } from "@/types";
+import { useMutation } from "@apollo/client";
 import { useFormik } from "formik";
-import { useAtom } from "jotai";
-import { AtomButton, AtomInput, AtomText, AtomWrapper } from "lucy-nxtjs";
+import { useSetAtom } from "jotai";
+import cookie from "js-cookie";
+import {
+  AtomButton,
+  AtomInput,
+  AtomLoader,
+  AtomText,
+  AtomWrapper,
+} from "lucy-nxtjs";
 import { NextPageFC } from "next";
 import { useRouter } from "next/router";
-import { ReactNode } from "react";
 import * as Yup from "yup";
-type Props = {
-  children?: ReactNode;
-};
 
-const LoginPage: NextPageFC = (props) => {
-  const [user, setUser] = useAtom(exportReduceWithAtom);
+const LoginPage: NextPageFC = () => {
+  const setUser = useSetAtom(exportReduceWithAtom);
 
   const router = useRouter();
+
+  const [EXECUTE_LOGIN_USER, { loading }] = useMutation<
+    IMutationFilter<"loginUser">
+  >(MUTATE_LOGIN_USER, {
+    onCompleted: (data) => {
+      cookie.set("cookie_user", data?.loginUser?.token as string);
+
+      setUser({
+        key: "SET",
+        payload: data?.loginUser?.user,
+      });
+      router.push("/");
+    },
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -25,10 +45,20 @@ const LoginPage: NextPageFC = (props) => {
       email: Yup.string().email().required(),
       password: Yup.string().required(),
     }),
-    onSubmit: () => {},
+    onSubmit: (values) => {
+      EXECUTE_LOGIN_USER({
+        variables: {
+          input: {
+            password: values.password,
+            email: values.email,
+          },
+        },
+      });
+    },
   });
   return (
     <AtomWrapper alignItems="center" justifyContent="center" height="100vh">
+      <AtomLoader isLoading={loading} type="fullscreen" colorLoad="#07deff" />
       <AtomWrapper
         width="420px"
         gap="15px"

@@ -3,20 +3,15 @@ import exportReduceWithAtom from "@/jotai/reducers/user";
 import { IMutationFilter } from "@/types";
 import { useMutation } from "@apollo/client";
 import { useFormik } from "formik";
-import { useAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import cookie from "js-cookie";
 import { AtomButton, AtomInput, AtomText, AtomWrapper } from "lucy-nxtjs";
 import { NextPageFC } from "next";
 import { useRouter } from "next/router";
-import { ReactNode } from "react";
 import * as Yup from "yup";
 
-type Props = {
-  children?: ReactNode;
-};
-
-const RegisterPage: NextPageFC = (props) => {
-  const [user, setUser] = useAtom(exportReduceWithAtom);
+const RegisterPage: NextPageFC = () => {
+  const setUser = useSetAtom(exportReduceWithAtom);
   const [EXECUTE_CREATE_USER] = useMutation<IMutationFilter<"createUser">>(
     MUTATE_CREATE_USER,
     {
@@ -27,6 +22,7 @@ const RegisterPage: NextPageFC = (props) => {
           key: "SET",
           payload: data?.createUser?.user,
         });
+        router.push("/");
       },
     }
   );
@@ -52,7 +48,6 @@ const RegisterPage: NextPageFC = (props) => {
       });
     },
   });
-  console.log(user);
 
   return (
     <AtomWrapper alignItems="center" justifyContent="center" height="100vh">

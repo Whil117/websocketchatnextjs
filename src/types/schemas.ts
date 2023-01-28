@@ -16,6 +16,7 @@ export interface IQuery {
   listChatByUser?: IListChatsByUser;
   listMessagesByChatUser?: IListMessagesChatUser;
   listUsers?: Array<IUserItem | null>;
+  me?: IUserItem;
 }
 
 export interface IInputFilterListChatUsers {
@@ -75,7 +76,6 @@ export interface IMutation {
   createChatByUser?: IChatByUserItem;
   createUser?: ILoginUserItem;
   loginUser?: ILoginUserItem;
-  me?: IUserItem;
 }
 
 export interface IInputCreateMessage {
@@ -148,6 +148,7 @@ export interface IQueryTypeResolver<TParent = any> {
   listChatByUser?: QueryToListChatByUserResolver<TParent>;
   listMessagesByChatUser?: QueryToListMessagesByChatUserResolver<TParent>;
   listUsers?: QueryToListUsersResolver<TParent>;
+  me?: QueryToMeResolver<TParent>;
 }
 
 export interface QueryToListChatByUserArgs {
@@ -165,6 +166,10 @@ export interface QueryToListMessagesByChatUserResolver<TParent = any, TResult = 
 }
 
 export interface QueryToListUsersResolver<TParent = any, TResult = any> {
+  (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
+}
+
+export interface QueryToMeResolver<TParent = any, TResult = any> {
   (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
 }
 
@@ -301,7 +306,6 @@ export interface IMutationTypeResolver<TParent = any> {
   createChatByUser?: MutationToCreateChatByUserResolver<TParent>;
   createUser?: MutationToCreateUserResolver<TParent>;
   loginUser?: MutationToLoginUserResolver<TParent>;
-  me?: MutationToMeResolver<TParent>;
 }
 
 export interface MutationToCreateMessageArgs {
@@ -330,10 +334,6 @@ export interface MutationToLoginUserArgs {
 }
 export interface MutationToLoginUserResolver<TParent = any, TResult = any> {
   (parent: TParent, args: MutationToLoginUserArgs, context: any, info: GraphQLResolveInfo): TResult;
-}
-
-export interface MutationToMeResolver<TParent = any, TResult = any> {
-  (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
 }
 
 export interface ILoginUserItemTypeResolver<TParent = any> {
