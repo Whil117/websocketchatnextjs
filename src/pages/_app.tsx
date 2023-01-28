@@ -10,8 +10,8 @@ import "react-toastify/dist/ReactToastify.css";
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
   return (
     <ApolloProvider client={client}>
+      <ToastContainer />
       <LayoutFC type={Component.type}>
-        <ToastContainer progressClassName="custom-progress-bar" />
         <Component {...pageProps} />
       </LayoutFC>
     </ApolloProvider>

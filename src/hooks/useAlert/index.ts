@@ -11,10 +11,14 @@ const backgroundColorTheme = {
   error: "#f36",
 };
 
-const useAlert = () => {
+type useAlertProps = {
+  theme?: "light" | "dark" | "colored";
+};
+
+const useAlert = (args?: useAlertProps) => {
   const insertAlert = (props: Props) => {
     toast(props?.message, {
-      type: props?.options?.type,
+      type: props?.type,
       position: "bottom-center",
       autoClose: 5000,
       hideProgressBar: false,
@@ -22,10 +26,7 @@ const useAlert = () => {
       pauseOnHover: true,
       draggable: true,
       progress: undefined,
-      theme: "dark",
-      progressStyle: {
-        backgroundColor: backgroundColorTheme[props?.options?.type],
-      },
+      theme: args?.theme ?? "dark",
       ...props?.options,
     });
   };

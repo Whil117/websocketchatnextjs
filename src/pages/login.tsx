@@ -27,6 +27,10 @@ const LoginPage: NextPageFC = () => {
     IMutationFilter<"loginUser">
   >(MUTATE_LOGIN_USER, {
     onCompleted: (data) => {
+      insertAlert({
+        type: "success",
+        message: "Bienvenido",
+      });
       cookie.set("cookie_user", data?.loginUser?.token as string);
 
       setUser({
@@ -76,7 +80,12 @@ const LoginPage: NextPageFC = () => {
           Welcome to Bubble
         </AtomText>
         <AtomInput formik={formik} id="email" type="text" label="Email" />
-        <AtomInput formik={formik} id="password" type="text" label="Password" />
+        <AtomInput
+          formik={formik}
+          id="password"
+          type="password"
+          label="Password"
+        />
         <AtomButton
           backgroundLinearGradient={{
             rotate: "315deg",

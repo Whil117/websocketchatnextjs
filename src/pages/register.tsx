@@ -25,10 +25,13 @@ const RegisterPage: NextPageFC = () => {
   >(MUTATE_CREATE_USER, {
     onCompleted: (data) => {
       cookie.set("cookie_user", data?.createUser?.token as string);
-
       setUser({
         key: "SET",
         payload: data?.createUser?.user,
+      });
+      insertAlert({
+        type: "success",
+        message: "Bienvenido",
       });
       router.push("/");
     },
@@ -51,18 +54,15 @@ const RegisterPage: NextPageFC = () => {
     }),
     onSubmit: (values) => {
       const { email, password } = values;
-      insertAlert({
-        type: "success",
-        message: "sdfaasdfdasf",
+
+      EXECUTE_CREATE_USER({
+        variables: {
+          input: {
+            email,
+            password,
+          },
+        },
       });
-      // EXECUTE_CREATE_USER({
-      //   variables: {
-      //     input: {
-      //       email,
-      //       password,
-      //     },
-      //   },
-      // });
     },
   });
 

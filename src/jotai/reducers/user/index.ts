@@ -5,7 +5,7 @@ import { atomWithStorage } from "jotai/utils";
 const InitialState = {} as IUserItem;
 
 export type ActionUser = {
-  key: "SET";
+  key: "SET" | "CLEAR";
   payload?: IUserItem | undefined;
 };
 const typeReducers = (state: IUserItem, payload: ActionUser["payload"]) => ({
@@ -13,6 +13,7 @@ const typeReducers = (state: IUserItem, payload: ActionUser["payload"]) => ({
     ...state,
     ...payload,
   },
+  CLEAR: {},
 });
 
 const User_AtomWithStorage = atomWithStorage("user", InitialState);

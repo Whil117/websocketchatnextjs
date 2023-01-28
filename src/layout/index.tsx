@@ -15,7 +15,7 @@ export type PropsLayout = {
 };
 const LayoutFC: FC<PropsLayout> = (props) => {
   const Component = Layouts[props?.type];
-  return <Component {...props} />;
+  return <Component {...props}> {props?.children}</Component>;
 };
 
 export default LayoutFC;
