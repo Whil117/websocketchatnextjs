@@ -1,4 +1,5 @@
 import { MUTATE_CREATE_USER } from "@/apollo/mutate/user";
+import useAlert from "@/hooks/useAlert";
 import exportReduceWithAtom from "@/jotai/reducers/user";
 import { IMutationFilter } from "@/types";
 import { useMutation } from "@apollo/client";
@@ -18,7 +19,7 @@ import * as Yup from "yup";
 
 const RegisterPage: NextPageFC = () => {
   const setUser = useSetAtom(exportReduceWithAtom);
-
+  const { insertAlert } = useAlert();
   const [EXECUTE_CREATE_USER, { loading }] = useMutation<
     IMutationFilter<"createUser">
   >(MUTATE_CREATE_USER, {
@@ -30,6 +31,12 @@ const RegisterPage: NextPageFC = () => {
         payload: data?.createUser?.user,
       });
       router.push("/");
+    },
+    onError: (error) => {
+      insertAlert({
+        type: "error",
+        message: error?.message,
+      });
     },
   });
   const router = useRouter();
@@ -44,14 +51,18 @@ const RegisterPage: NextPageFC = () => {
     }),
     onSubmit: (values) => {
       const { email, password } = values;
-      EXECUTE_CREATE_USER({
-        variables: {
-          input: {
-            email,
-            password,
-          },
-        },
+      insertAlert({
+        type: "success",
+        message: "sdfaasdfdasf",
       });
+      // EXECUTE_CREATE_USER({
+      //   variables: {
+      //     input: {
+      //       email,
+      //       password,
+      //     },
+      //   },
+      // });
     },
   });
 

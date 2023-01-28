@@ -1,5 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 import { MUTATE_LOGIN_USER } from "@/apollo/mutate/user";
+import useAlert from "@/hooks/useAlert";
 import exportReduceWithAtom from "@/jotai/reducers/user";
 import { IMutationFilter } from "@/types";
 import { useMutation } from "@apollo/client";
@@ -19,7 +20,7 @@ import * as Yup from "yup";
 
 const LoginPage: NextPageFC = () => {
   const setUser = useSetAtom(exportReduceWithAtom);
-
+  const { insertAlert } = useAlert();
   const router = useRouter();
 
   const [EXECUTE_LOGIN_USER, { loading }] = useMutation<
@@ -33,6 +34,12 @@ const LoginPage: NextPageFC = () => {
         payload: data?.loginUser?.user,
       });
       router.push("/");
+    },
+    onError: (error) => {
+      insertAlert({
+        type: "error",
+        message: error?.message,
+      });
     },
   });
 
