@@ -5,27 +5,33 @@ import { useMutation } from "@apollo/client";
 import { useFormik } from "formik";
 import { useSetAtom } from "jotai";
 import cookie from "js-cookie";
-import { AtomButton, AtomInput, AtomText, AtomWrapper } from "lucy-nxtjs";
+import {
+  AtomButton,
+  AtomInput,
+  AtomLoader,
+  AtomText,
+  AtomWrapper,
+} from "lucy-nxtjs";
 import { NextPageFC } from "next";
 import { useRouter } from "next/router";
 import * as Yup from "yup";
 
 const RegisterPage: NextPageFC = () => {
   const setUser = useSetAtom(exportReduceWithAtom);
-  const [EXECUTE_CREATE_USER] = useMutation<IMutationFilter<"createUser">>(
-    MUTATE_CREATE_USER,
-    {
-      onCompleted: (data) => {
-        cookie.set("cookie_user", data?.createUser?.token as string);
 
-        setUser({
-          key: "SET",
-          payload: data?.createUser?.user,
-        });
-        router.push("/");
-      },
-    }
-  );
+  const [EXECUTE_CREATE_USER, { loading }] = useMutation<
+    IMutationFilter<"createUser">
+  >(MUTATE_CREATE_USER, {
+    onCompleted: (data) => {
+      cookie.set("cookie_user", data?.createUser?.token as string);
+
+      setUser({
+        key: "SET",
+        payload: data?.createUser?.user,
+      });
+      router.push("/");
+    },
+  });
   const router = useRouter();
   const formik = useFormik({
     initialValues: {
@@ -51,6 +57,7 @@ const RegisterPage: NextPageFC = () => {
 
   return (
     <AtomWrapper alignItems="center" justifyContent="center" height="100vh">
+      <AtomLoader isLoading={loading} type="fullscreen" colorLoad="#07deff" />
       <AtomWrapper
         width="420px"
         gap="15px"
