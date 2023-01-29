@@ -34,7 +34,7 @@ export interface IListChatsByUser {
 export interface IChatByUserItem {
   id?: string;
   usersId?: Array<string | null>;
-  users?: Array<IUserItem | null>;
+  user?: IUserItem;
 }
 
 export interface IUserItem {
@@ -229,7 +229,7 @@ export interface ListChatsByUserToPageInfoResolver<TParent = any, TResult = any>
 export interface IChatByUserItemTypeResolver<TParent = any> {
   id?: ChatByUserItemToIdResolver<TParent>;
   usersId?: ChatByUserItemToUsersIdResolver<TParent>;
-  users?: ChatByUserItemToUsersResolver<TParent>;
+  user?: ChatByUserItemToUserResolver<TParent>;
 }
 
 export interface ChatByUserItemToIdResolver<TParent = any, TResult = any> {
@@ -240,7 +240,7 @@ export interface ChatByUserItemToUsersIdResolver<TParent = any, TResult = any> {
   (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
 }
 
-export interface ChatByUserItemToUsersResolver<TParent = any, TResult = any> {
+export interface ChatByUserItemToUserResolver<TParent = any, TResult = any> {
   (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
 }
 

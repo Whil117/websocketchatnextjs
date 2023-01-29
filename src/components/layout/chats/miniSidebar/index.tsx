@@ -8,7 +8,7 @@ type Props = {
   children?: ReactNode;
 };
 
-const MiniSidebarPage: FC<Props> = (props) => {
+const MiniSidebarPage: FC<Props> = () => {
   const user = useAtomValue(exportReduceWithAtom);
 
   return (

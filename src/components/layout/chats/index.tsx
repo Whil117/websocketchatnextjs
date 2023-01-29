@@ -1,4 +1,9 @@
+import { QUERY_LIST_CHAT_BY_USER } from "@/apollo/query/chat";
+import exportReduceWithAtom from "@/jotai/reducers/user";
+import { IQueryFilter } from "@/types";
+import { useQuery } from "@apollo/client";
 import { css } from "@emotion/react";
+import { useAtomValue } from "jotai";
 import { AtomButton, AtomImage, AtomText, AtomWrapper } from "lucy-nxtjs";
 import { useRouter } from "next/router";
 import { FC, ReactNode } from "react";
@@ -8,8 +13,22 @@ type Props = {
   children?: ReactNode;
 };
 
-const ComponentLayoutChats: FC<Props> = (props) => {
+const ComponentLayoutChats: FC<Props> = () => {
   const router = useRouter();
+  const user = useAtomValue(exportReduceWithAtom);
+
+  const { data } = useQuery<IQueryFilter<"listChatByUser">>(
+    QUERY_LIST_CHAT_BY_USER,
+    {
+      variables: {
+        filter: {
+          userId: user?.id,
+          take: null,
+          page: null,
+        },
+      },
+    }
+  );
   return (
     <AtomWrapper
       backgroundColor="var(--background-color-secondary)"
@@ -40,14 +59,9 @@ const ComponentLayoutChats: FC<Props> = (props) => {
       </AtomWrapper>
       <LayoutSearchUser>
         <AtomWrapper gap="10px" padding="5px" height="auto">
-          {[
-            {
-              id: "307e712c-a61c-4baf-af0c-3710aa15a019",
-              usersId: ["38672bf2-02ed-4438-96e4-f9dcf2f2ca5b"],
-            },
-          ].map((item) => (
+          {data?.listChatByUser?.items?.map((item) => (
             <AtomWrapper
-              key={item.id}
+              key={item?.id}
               flexDirection="row"
               flexWrap="nowrap"
               gap="10px"
@@ -58,7 +72,7 @@ const ComponentLayoutChats: FC<Props> = (props) => {
               `}
             >
               <AtomImage
-                src="https://picsum.photos/200/300"
+                src={item?.user?.image as string}
                 width="60px"
                 height="60px"
                 borderRadius="50%"
@@ -69,16 +83,14 @@ const ComponentLayoutChats: FC<Props> = (props) => {
                   justifyContent="space-between"
                   width="100%"
                   onClick={() => {
-                    router.push(`/chat/${item.id}`);
+                    router.push(`/chat/${item?.id}`);
                   }}
                   height="auto"
                 >
                   <AtomText width="auto" fontWeight="bold" cursor="pointer">
-                    CHAT 1
+                    {item?.user?.fullName ?? "No disponible"}
                   </AtomText>
-                  <AtomText width="auto">2:40 PM</AtomText>
                 </AtomWrapper>
-                <AtomText cursor="pointer">Message</AtomText>
               </AtomWrapper>
             </AtomWrapper>
           ))}

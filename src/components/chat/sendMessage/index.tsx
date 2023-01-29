@@ -1,8 +1,11 @@
 import { MUTATE_CREATE_MESSAGE_CHAT } from "@/apollo/mutate/chat";
+import exportReduceWithAtom from "@/jotai/reducers/user";
 import { useMutation } from "@apollo/client";
 import { css } from "@emotion/react";
 import { useFormik } from "formik";
+import { useAtomValue } from "jotai";
 import { AtomInput } from "lucy-nxtjs";
+import { useRouter } from "next/router";
 import { FC, ReactNode } from "react";
 import * as Yup from "yup";
 
@@ -12,7 +15,9 @@ type Props = {
 
 const SendMessage: FC<Props> = () => {
   const [EXECUTE_CREATE_MESSAGE] = useMutation(MUTATE_CREATE_MESSAGE_CHAT);
-
+  const router = useRouter();
+  const chatId = router?.query?.id;
+  const user = useAtomValue(exportReduceWithAtom);
   const formik = useFormik({
     initialValues: {
       message: "",
@@ -24,9 +29,9 @@ const SendMessage: FC<Props> = () => {
       EXECUTE_CREATE_MESSAGE({
         variables: {
           input: {
-            conversationId: "307e712c-a61c-4baf-af0c-3710aa15a019",
+            conversationId: chatId,
             message: values.message,
-            userId: "dfaad4fc-ee9a-4076-a704-cd2a13f321c9",
+            userId: user?.id,
           },
         },
       });

@@ -13,31 +13,31 @@ import { useEffect, useRef, useState } from "react";
 
 const ChatById: NextPageFC = () => {
   const router = useRouter();
-
   const [page, setPage] = useState(1);
+  const chatId = router?.query?.id;
 
   const query = useQuery<IQueryFilter<"listMessagesByChatUser">>(
     QUERY_LIST_MESSAGES_BY_CHAT,
     {
-      skip: !router?.query?.id,
+      skip: !chatId,
       fetchPolicy: "cache-and-network",
       variables: {
         filter: {
           take: 50,
           page: page,
-          conversationId: router?.query?.id,
+          conversationId: chatId,
         },
       },
     }
   );
-  const { subscribeToMore } = query;
+  const { subscribeToMore, data } = query;
 
   useEffect(() => {
     subscribeToMore({
       document: SUBSCRIBE_MESSAGE_CHAT,
       variables: {
         input: {
-          id: "307e712c-a61c-4baf-af0c-3710aa15a019",
+          id: chatId,
         },
       },
       updateQuery: (prev, { subscriptionData }: any) => {
@@ -63,8 +63,6 @@ const ChatById: NextPageFC = () => {
       },
     });
   }, []);
-
-  const { data } = query;
 
   const messages = [...(data?.listMessagesByChatUser?.items ?? [])]?.reverse();
 
@@ -163,7 +161,7 @@ const ChatById: NextPageFC = () => {
                 cursor: text;
               `}
             >
-              {item.message}
+              {item?.message}
             </AtomText>
           </AtomWrapper>
         ))}
