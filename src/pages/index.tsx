@@ -1,8 +1,11 @@
+import exportReduceWithAtom from "@/jotai/reducers/user";
 import { css } from "@emotion/react";
+import { useAtomValue } from "jotai";
 import { AtomIcon, AtomText, AtomWrapper } from "lucy-nxtjs";
 import { NextPageFC } from "next";
 
 const Home: NextPageFC = () => {
+  const user = useAtomValue(exportReduceWithAtom);
   return (
     <AtomWrapper alignItems="center" height="100%" justifyContent="center">
       <AtomIcon
@@ -17,7 +20,7 @@ const Home: NextPageFC = () => {
         `}
       />
       <AtomText fontSize="18px" fontWeight="normal">
-        Welcome Whil!
+        Welcome {user?.fullName}!
       </AtomText>
     </AtomWrapper>
   );

@@ -1,6 +1,4 @@
-import exportReduceWithAtom from "@/jotai/reducers/user";
 import { css } from "@emotion/react";
-import { useAtomValue } from "jotai";
 import { AtomButton, AtomImage, AtomText, AtomWrapper } from "lucy-nxtjs";
 import { useRouter } from "next/router";
 import { FC, ReactNode } from "react";
@@ -12,7 +10,6 @@ type Props = {
 
 const ComponentLayoutChats: FC<Props> = (props) => {
   const router = useRouter();
-  const user = useAtomValue(exportReduceWithAtom);
   return (
     <AtomWrapper
       backgroundColor="var(--background-color-secondary)"
@@ -87,9 +84,6 @@ const ComponentLayoutChats: FC<Props> = (props) => {
           ))}
         </AtomWrapper>
       </LayoutSearchUser>
-      <AtomText>
-        {user?.email} {user?.id}
-      </AtomText>
     </AtomWrapper>
   );
 };

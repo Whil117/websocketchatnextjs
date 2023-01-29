@@ -41,6 +41,7 @@ export interface IUserItem {
   id?: string;
   name?: string;
   lastName?: string;
+  image?: string;
   age?: number;
   email?: string;
   fullName?: string;
@@ -128,6 +129,7 @@ export interface IInputUpdateUser {
   id: string;
   name?: string;
   lastName?: string;
+  image?: string;
   age?: number;
 }
 
@@ -246,6 +248,7 @@ export interface IUserItemTypeResolver<TParent = any> {
   id?: UserItemToIdResolver<TParent>;
   name?: UserItemToNameResolver<TParent>;
   lastName?: UserItemToLastNameResolver<TParent>;
+  image?: UserItemToImageResolver<TParent>;
   age?: UserItemToAgeResolver<TParent>;
   email?: UserItemToEmailResolver<TParent>;
   fullName?: UserItemToFullNameResolver<TParent>;
@@ -260,6 +263,10 @@ export interface UserItemToNameResolver<TParent = any, TResult = any> {
 }
 
 export interface UserItemToLastNameResolver<TParent = any, TResult = any> {
+  (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
+}
+
+export interface UserItemToImageResolver<TParent = any, TResult = any> {
   (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
 }
 

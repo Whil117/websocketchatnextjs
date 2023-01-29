@@ -19,7 +19,7 @@ const useAlert = (args?: useAlertProps) => {
   const insertAlert = (props: Props) => {
     toast(props?.message, {
       type: props?.type,
-      position: "bottom-center",
+      position: "top-center",
       autoClose: 5000,
       hideProgressBar: false,
       closeOnClick: true,

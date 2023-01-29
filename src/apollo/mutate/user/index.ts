@@ -5,11 +5,13 @@ export const MUTATE_CREATE_USER = gql`
     createUser(input: $input) {
       token
       user {
-        age
-        email
-        id
-        lastName
         name
+        lastName
+        id
+        fullName
+        image
+        email
+        age
       }
     }
   }
@@ -22,6 +24,8 @@ export const MUTATE_LOGIN_USER = gql`
         name
         lastName
         id
+        fullName
+        image
         email
         age
       }
