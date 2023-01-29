@@ -9,14 +9,19 @@ export const QUERY_LIST_MESSAGES_BY_CHAT = gql`
         hasNextPage
       }
       items {
-        message
         conversationId
-        userId
+        createdAt
+        id
         user {
+          id
+          email
+          fullName
+          image
+          lastName
           name
         }
-        id
-        createdAt
+        message
+        userId
       }
     }
   }

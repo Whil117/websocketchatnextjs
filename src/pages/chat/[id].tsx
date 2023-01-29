@@ -9,18 +9,17 @@ import { css } from "@emotion/react";
 import { AtomButton, AtomImage, AtomText, AtomWrapper } from "lucy-nxtjs";
 import { NextPageFC } from "next";
 import { useRouter } from "next/router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 const ChatById: NextPageFC = () => {
   const router = useRouter();
   const [page, setPage] = useState(1);
-  const chatId = router?.query?.id;
+  const chatId = useMemo(() => router?.query?.id, [router]);
 
   const query = useQuery<IQueryFilter<"listMessagesByChatUser">>(
     QUERY_LIST_MESSAGES_BY_CHAT,
     {
       skip: !chatId,
-      fetchPolicy: "cache-and-network",
       variables: {
         filter: {
           take: 50,
@@ -32,37 +31,46 @@ const ChatById: NextPageFC = () => {
   );
   const { subscribeToMore, data } = query;
 
+  const [subscription, setSubscription] = useState<any>(null);
+
   useEffect(() => {
-    subscribeToMore({
-      document: SUBSCRIBE_MESSAGE_CHAT,
-      variables: {
-        input: {
-          id: chatId,
-        },
-      },
-      updateQuery: (prev, { subscriptionData }: any) => {
-        if (!subscriptionData.data) return prev;
-        const newMessage = subscriptionData.data?.postCreated;
-        const newIm = {
-          conversationId: newMessage?.conversationId,
-          id: newMessage?.id,
-          message: newMessage?.message,
-          userId: newMessage?.userId,
-          user: null,
-          createdAt: newMessage?.createdAt ?? Date.now(),
-        };
+    if (subscription) {
+      subscription();
+    }
 
-        const result = Object.assign({}, prev, {
-          listMessagesByChatUser: {
-            ...prev.listMessagesByChatUser,
-            items: [newIm, ...(prev?.listMessagesByChatUser?.items ?? [])],
+    setSubscription(
+      subscribeToMore({
+        document: SUBSCRIBE_MESSAGE_CHAT,
+        variables: {
+          input: {
+            id: chatId,
           },
-        });
+        },
+        updateQuery: (prev, { subscriptionData }: any) => {
+          if (!subscriptionData.data) return prev;
+          const newMessage = subscriptionData.data?.postCreated;
+          const result = Object.assign({}, prev, {
+            listMessagesByChatUser: {
+              ...prev.listMessagesByChatUser,
+              items: [
+                newMessage,
+                ...(prev?.listMessagesByChatUser?.items ?? []),
+              ],
+            },
+          });
 
-        return result;
-      },
-    });
-  }, []);
+          return result;
+        },
+      })
+    );
+
+    return () => {
+      if (subscription) {
+        subscription();
+      }
+    };
+  }, [chatId]);
+  console.log(data);
 
   const messages = [...(data?.listMessagesByChatUser?.items ?? [])]?.reverse();
 
@@ -142,27 +150,35 @@ const ChatById: NextPageFC = () => {
         {messages?.map((item) => (
           <AtomWrapper
             height="auto"
-            width="auto"
             key={item?.id}
             customCSS={css`
               padding: 10px 10px;
-              display: grid;
               gap: 10px;
               &:hover {
                 background-color: var(--background-color-tertiary);
               }
+              display: grid;
+              grid-template-columns: 50px 1fr;
             `}
           >
-            <AtomText
-              customCSS={css`
-                overflow: hidden;
-                text-overflow: Ellipsis;
-                word-wrap: break-word;
-                cursor: text;
-              `}
-            >
-              {item?.message}
-            </AtomText>
+            <AtomImage
+              src={item?.user?.image as string}
+              width="50px"
+              height="50px"
+            />
+            <AtomWrapper>
+              <AtomText>{item?.user?.fullName}</AtomText>
+              <AtomText
+                customCSS={css`
+                  overflow: hidden;
+                  text-overflow: Ellipsis;
+                  word-wrap: break-word;
+                  cursor: text;
+                `}
+              >
+                {item?.message}
+              </AtomText>
+            </AtomWrapper>
           </AtomWrapper>
         ))}
       </AtomWrapper>

@@ -8,3 +8,12 @@ export const MUTATE_CREATE_MESSAGE_CHAT = gql`
     }
   }
 `;
+
+export const MUTATE_CREATE_CHAT = gql`
+  mutation CreateChatByUser($input: InputCreateChatByUser) {
+    createChatByUser(input: $input) {
+      id
+      usersId
+    }
+  }
+`;
