@@ -31,7 +31,7 @@ const RegisterPage: NextPageFC = () => {
       });
       insertAlert({
         type: "success",
-        message: "Bienvenido",
+        message: "Welcome",
       });
       router.push("/");
     },

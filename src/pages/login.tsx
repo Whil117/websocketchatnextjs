@@ -29,7 +29,7 @@ const LoginPage: NextPageFC = () => {
     onCompleted: (data) => {
       insertAlert({
         type: "success",
-        message: "Bienvenido",
+        message: "Welcome",
       });
       cookie.set("cookie_user", data?.loginUser?.token as string);
 

@@ -61,7 +61,7 @@ const ComponentLayoutChats: FC<Props> = (props) => {
                 src="https://picsum.photos/200/300"
                 width="60px"
                 height="60px"
-                borderRadius="10px"
+                borderRadius="50%"
               />
               <AtomWrapper cursor="pointer" height="auto">
                 <AtomWrapper
