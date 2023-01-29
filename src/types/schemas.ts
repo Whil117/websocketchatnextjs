@@ -15,7 +15,7 @@ import { GraphQLResolveInfo } from 'graphql';
 export interface IQuery {
   listChatByUser?: IListChatsByUser;
   listMessagesByChatUser?: IListMessagesChatUser;
-  listUsers?: Array<IUserItem | null>;
+  listUsers?: IListUsersPaginated;
   me?: IUserItem;
 }
 
@@ -43,6 +43,7 @@ export interface IUserItem {
   lastName?: string;
   age?: number;
   email?: string;
+  fullName?: string;
 }
 
 export interface IPaginationQuery {
@@ -71,10 +72,31 @@ export interface IMessageChatConversation {
   createdAt?: string;
 }
 
+export interface IInputFilterListUsers {
+  input?: ITakeAndPageListUsers;
+  filter?: IFilterListUsers;
+}
+
+export interface ITakeAndPageListUsers {
+  take?: number;
+  page?: number;
+}
+
+export interface IFilterListUsers {
+  fullName?: string;
+}
+
+export interface IListUsersPaginated {
+  items?: Array<IUserItem | null>;
+  totalCount?: number;
+  pageInfo?: IPaginationQuery;
+}
+
 export interface IMutation {
   createMessage?: IMessageChatConversation;
   createChatByUser?: IChatByUserItem;
   createUser?: ILoginUserItem;
+  updateUser?: IUserItem;
   loginUser?: ILoginUserItem;
 }
 
@@ -100,6 +122,13 @@ export interface IInputCreateUser {
 export interface ILoginUserItem {
   token?: string;
   user?: IUserItem;
+}
+
+export interface IInputUpdateUser {
+  id: string;
+  name?: string;
+  lastName?: string;
+  age?: number;
 }
 
 export interface IInputLoginUser {
@@ -139,6 +168,7 @@ export interface IResolver {
   PaginationQuery?: IPaginationQueryTypeResolver;
   ListMessagesChatUser?: IListMessagesChatUserTypeResolver;
   MessageChatConversation?: IMessageChatConversationTypeResolver;
+  ListUsersPaginated?: IListUsersPaginatedTypeResolver;
   Mutation?: IMutationTypeResolver;
   LoginUserItem?: ILoginUserItemTypeResolver;
   Subscription?: ISubscriptionTypeResolver;
@@ -165,8 +195,11 @@ export interface QueryToListMessagesByChatUserResolver<TParent = any, TResult = 
   (parent: TParent, args: QueryToListMessagesByChatUserArgs, context: any, info: GraphQLResolveInfo): TResult;
 }
 
+export interface QueryToListUsersArgs {
+  input?: IInputFilterListUsers;
+}
 export interface QueryToListUsersResolver<TParent = any, TResult = any> {
-  (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
+  (parent: TParent, args: QueryToListUsersArgs, context: any, info: GraphQLResolveInfo): TResult;
 }
 
 export interface QueryToMeResolver<TParent = any, TResult = any> {
@@ -215,6 +248,7 @@ export interface IUserItemTypeResolver<TParent = any> {
   lastName?: UserItemToLastNameResolver<TParent>;
   age?: UserItemToAgeResolver<TParent>;
   email?: UserItemToEmailResolver<TParent>;
+  fullName?: UserItemToFullNameResolver<TParent>;
 }
 
 export interface UserItemToIdResolver<TParent = any, TResult = any> {
@@ -234,6 +268,10 @@ export interface UserItemToAgeResolver<TParent = any, TResult = any> {
 }
 
 export interface UserItemToEmailResolver<TParent = any, TResult = any> {
+  (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
+}
+
+export interface UserItemToFullNameResolver<TParent = any, TResult = any> {
   (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
 }
 
@@ -301,10 +339,29 @@ export interface MessageChatConversationToCreatedAtResolver<TParent = any, TResu
   (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
 }
 
+export interface IListUsersPaginatedTypeResolver<TParent = any> {
+  items?: ListUsersPaginatedToItemsResolver<TParent>;
+  totalCount?: ListUsersPaginatedToTotalCountResolver<TParent>;
+  pageInfo?: ListUsersPaginatedToPageInfoResolver<TParent>;
+}
+
+export interface ListUsersPaginatedToItemsResolver<TParent = any, TResult = any> {
+  (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
+}
+
+export interface ListUsersPaginatedToTotalCountResolver<TParent = any, TResult = any> {
+  (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
+}
+
+export interface ListUsersPaginatedToPageInfoResolver<TParent = any, TResult = any> {
+  (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
+}
+
 export interface IMutationTypeResolver<TParent = any> {
   createMessage?: MutationToCreateMessageResolver<TParent>;
   createChatByUser?: MutationToCreateChatByUserResolver<TParent>;
   createUser?: MutationToCreateUserResolver<TParent>;
+  updateUser?: MutationToUpdateUserResolver<TParent>;
   loginUser?: MutationToLoginUserResolver<TParent>;
 }
 
@@ -327,6 +384,13 @@ export interface MutationToCreateUserArgs {
 }
 export interface MutationToCreateUserResolver<TParent = any, TResult = any> {
   (parent: TParent, args: MutationToCreateUserArgs, context: any, info: GraphQLResolveInfo): TResult;
+}
+
+export interface MutationToUpdateUserArgs {
+  input?: IInputUpdateUser;
+}
+export interface MutationToUpdateUserResolver<TParent = any, TResult = any> {
+  (parent: TParent, args: MutationToUpdateUserArgs, context: any, info: GraphQLResolveInfo): TResult;
 }
 
 export interface MutationToLoginUserArgs {

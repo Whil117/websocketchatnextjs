@@ -46,6 +46,9 @@ body {
   line-height: 1.3em;
   margin: 0px;
   padding: 0px;
+  overflow: hidden;
+  display: flex;
+  height: 100vh;
 }
 .flatpickr-calendar {
   font-family: "GT Walsheim medium", sans-serif;

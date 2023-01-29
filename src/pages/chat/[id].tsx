@@ -1,34 +1,22 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable react-hooks/exhaustive-deps */
-import { MUTATE_CREATE_MESSAGE_CHAT } from "@/apollo/mutate/chat";
 import { QUERY_LIST_MESSAGES_BY_CHAT } from "@/apollo/query/messages";
 import { SUBSCRIBE_MESSAGE_CHAT } from "@/apollo/subscribe/chat";
-import { useMutation, useQuery } from "@apollo/client";
+import SendMessage from "@/components/chat/sendMessage";
+import { IQueryFilter } from "@/types";
+import { useQuery } from "@apollo/client";
 import { css } from "@emotion/react";
-import { useFormik } from "formik";
-import {
-  AtomButton,
-  AtomImage,
-  AtomInput,
-  AtomLoader,
-  AtomText,
-  AtomWrapper,
-} from "lucy-nxtjs";
+import { AtomButton, AtomImage, AtomText, AtomWrapper } from "lucy-nxtjs";
 import { NextPageFC } from "next";
 import { useRouter } from "next/router";
-import { ReactNode, useEffect, useMemo, useRef, useState } from "react";
-import * as Yup from "yup";
-
-type Props = {
-  children?: ReactNode;
-};
+import { useEffect, useRef, useState } from "react";
 
 const ChatById: NextPageFC = () => {
   const router = useRouter();
 
   const [page, setPage] = useState(1);
 
-  const { data, subscribeToMore, loading } = useQuery(
+  const query = useQuery<IQueryFilter<"listMessagesByChatUser">>(
     QUERY_LIST_MESSAGES_BY_CHAT,
     {
       skip: !router?.query?.id,
@@ -42,8 +30,7 @@ const ChatById: NextPageFC = () => {
       },
     }
   );
-
-  const [EXECUTE_CREATE_MESSAGE] = useMutation(MUTATE_CREATE_MESSAGE_CHAT);
+  const { subscribeToMore } = query;
 
   useEffect(() => {
     subscribeToMore({
@@ -77,34 +64,9 @@ const ChatById: NextPageFC = () => {
     });
   }, []);
 
-  const messages = useMemo(
-    () =>
-      [...(data?.listMessagesByChatUser?.items ?? [])]?.sort(
-        (a, b) => a.createdAt - b.createdAt
-      ),
-    [data?.listMessagesByChatUser?.items]
-  );
+  const { data } = query;
 
-  const formik = useFormik({
-    initialValues: {
-      message: "",
-    },
-    validationSchema: Yup.object({
-      message: Yup.string().required(),
-    }),
-    onSubmit: (values, { resetForm }) => {
-      EXECUTE_CREATE_MESSAGE({
-        variables: {
-          input: {
-            conversationId: "307e712c-a61c-4baf-af0c-3710aa15a019",
-            message: values.message,
-            userId: "dfaad4fc-ee9a-4076-a704-cd2a13f321c9",
-          },
-        },
-      });
-      resetForm();
-    },
-  });
+  const messages = [...(data?.listMessagesByChatUser?.items ?? [])]?.reverse();
 
   const chatScroll = useRef<HTMLDivElement>(null);
 
@@ -115,24 +77,14 @@ const ChatById: NextPageFC = () => {
   }, [messages, page]);
 
   return (
-    <AtomWrapper
-      customCSS={css`
-        flex-direction: column;
-        flex-wrap: nowrap;
-        overflow: hidden;
-      `}
-      height="100%"
-    >
+    <AtomWrapper height="100%" width="100%">
       <AtomWrapper
-        height="60px"
-        width="100%"
-        padding="10px"
-        justifyContent="flex-start"
-        alignItems="center"
-        flexDirection="row"
-        flexWrap="nowrap"
-        gap="5px"
         backgroundColor="var(--background-color-secondary)"
+        height="100px"
+        flexDirection="row"
+        alignItems="center"
+        justifyContent="flex-start"
+        padding="20px"
       >
         <AtomImage
           src="https://picsum.photos/200/300"
@@ -144,87 +96,80 @@ const ChatById: NextPageFC = () => {
           Whil García
         </AtomText>
       </AtomWrapper>
-      {loading ? (
-        <AtomWrapper alignItems="center" justifyContent="center" height="100%">
-          <AtomLoader isLoading colorLoad="#07deff" type="medium" />
-        </AtomWrapper>
-      ) : (
-        <AtomWrapper
-          ref={chatScroll}
-          onScroll={() => {
-            if (chatScroll.current) {
-              const { scrollTop, clientHeight, scrollHeight } =
-                chatScroll.current;
 
-              const scrollDown = scrollTop + clientHeight + scrollHeight;
-
-              if (data?.listMessagesByChatUser?.pageInfo?.hasNextPage) {
-                if (chatScroll.current.scrollTop === 0) {
-                  setPage((prev) => prev + 1);
-                  // chatScroll.current.scrollTop = scrollDown - 10;
-                }
-              }
-
-              if (data?.listMessagesByChatUser?.pageInfo?.hasPreviousPage) {
-                if (scrollTop + clientHeight === scrollHeight) {
-                  setPage((prev) => prev - 1);
-                  // chatScroll.current.scrollTop = 10;
-                  // console.log(chatScroll.current.scrollTop);
-                }
-              }
-            }
-          }}
-          customCSS={css`
-            height: 100%;
-            overflow: hidden;
-            overflow-x: hidden;
-            overflow-y: scroll;
-            flex-direction: column;
-            flex-wrap: nowrap;
-            padding: 12px;
-            ::-webkit-scrollbar {
-              width: 8px;
-            }
-
-            ::-webkit-scrollbar-thumb {
-              background: #ccc;
-              border-radius: 4px;
-            }
-            ::-webkit-scrollbar-thumb:hover {
-              background: #b3b3b3;
-              box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.2);
-            }
-          `}
-        >
-          {messages?.map((item) => (
-            <AtomWrapper
-              key={item?.id}
-              customCSS={css`
-                padding: 10px 10px;
-                display: grid;
-                gap: 10px;
-                &:hover {
-                  background-color: var(--background-color-tertiary);
-                }
-              `}
-              minHeight="220px"
-            >
-              <AtomText
-                customCSS={css`
-                  width: 100%;
-                  overflow: hidden;
-                  text-overflow: Ellipsis;
-                  word-wrap: break-word;
-                  cursor: text;
-                `}
-              >
-                {item.message}
-              </AtomText>
-            </AtomWrapper>
-          ))}
-        </AtomWrapper>
-      )}
       <AtomWrapper
+        ref={chatScroll}
+        onScroll={() => {
+          if (chatScroll.current) {
+            const { scrollTop, clientHeight, scrollHeight } =
+              chatScroll.current;
+
+            if (data?.listMessagesByChatUser?.pageInfo?.hasNextPage) {
+              if (chatScroll.current.scrollTop === 0) {
+                setPage((prev) => prev + 1);
+              }
+            }
+
+            if (data?.listMessagesByChatUser?.pageInfo?.hasPreviousPage) {
+              if (scrollTop + clientHeight === scrollHeight) {
+                setPage((prev) => prev - 1);
+              }
+            }
+          }
+        }}
+        customCSS={css`
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+          overflow-x: hidden;
+          overflow-y: scroll;
+          flex-direction: column;
+          justify-content: flex-start;
+          flex-wrap: nowrap;
+          padding: 12px;
+          ::-webkit-scrollbar {
+            width: 8px;
+          }
+
+          ::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 4px;
+          }
+          ::-webkit-scrollbar-thumb:hover {
+            background: #b3b3b3;
+            box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.2);
+          }
+        `}
+      >
+        {messages?.map((item) => (
+          <AtomWrapper
+            height="auto"
+            width="auto"
+            key={item?.id}
+            customCSS={css`
+              padding: 10px 10px;
+              display: grid;
+              gap: 10px;
+              &:hover {
+                background-color: var(--background-color-tertiary);
+              }
+            `}
+          >
+            <AtomText
+              customCSS={css`
+                overflow: hidden;
+                text-overflow: Ellipsis;
+                word-wrap: break-word;
+                cursor: text;
+              `}
+            >
+              {item.message}
+            </AtomText>
+          </AtomWrapper>
+        ))}
+      </AtomWrapper>
+      <AtomWrapper
+        height="auto"
         customCSS={css`
           padding: 12px;
         `}
@@ -257,34 +202,7 @@ const ChatById: NextPageFC = () => {
             page {page}
           </AtomButton>
         )}
-        <AtomInput
-          type="textbox"
-          id="message"
-          height="80px"
-          formik={formik}
-          onKeyUp={(event) => {
-            event.stopPropagation();
-            if (event.key === "Enter" && !event.shiftKey && !event.repeat) {
-              formik.submitForm();
-            }
-          }}
-          customCSS={css`
-            textarea {
-              ::-webkit-scrollbar {
-                width: 6px;
-              }
-
-              ::-webkit-scrollbar-thumb {
-                background: #ccc;
-                border-radius: 4px;
-              }
-              ::-webkit-scrollbar-thumb:hover {
-                background: #b3b3b3;
-                box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.2);
-              }
-            }
-          `}
-        />
+        <SendMessage />
       </AtomWrapper>
     </AtomWrapper>
   );

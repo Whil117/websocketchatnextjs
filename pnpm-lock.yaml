@@ -19,12 +19,14 @@ specifiers:
   eslint-config-next: 13.1.4
   express: ^4.18.2
   formik: ^2.2.9
+  framer: ^2.2.1
   graphql: ^16.6.0
   graphql-ws: ^5.11.2
   jotai: ^1.13.1
   js-cookie: ^3.0.1
-  lucy-nxtjs: 0.0.12
+  lucy-nxtjs: 0.0.13
   mongoose: ^6.8.4
+  motion: ^10.15.5
   net: ^1.0.2
   next: 13.1.4
   react: 18.2.0
@@ -55,12 +57,14 @@ dependencies:
   eslint-config-next: 13.1.4_7uibuqfxkfaozanbtbziikiqje
   express: 4.18.2
   formik: 2.2.9_react@18.2.0
+  framer: 2.2.1_biqbaboplfbrettd7655fr4n2y
   graphql: 16.6.0
   graphql-ws: 5.11.2_graphql@16.6.0
   jotai: 1.13.1_react@18.2.0
   js-cookie: 3.0.1
-  lucy-nxtjs: 0.0.12_fzm4xuxumdv242e5mmtnshytga
+  lucy-nxtjs: 0.0.13_fzm4xuxumdv242e5mmtnshytga
   mongoose: 6.8.4
+  motion: 10.15.5
   net: 1.0.2
   next: 13.1.4_biqbaboplfbrettd7655fr4n2y
   react: 18.2.0
@@ -1185,6 +1189,10 @@ packages:
     resolution: {integrity: sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==}
     dev: false
 
+  /@juggle/resize-observer/3.4.0:
+    resolution: {integrity: sha512-dfLbk+PwWvFzSxwk3n5ySL0hfBog779o8h68wK/7/APo/7cgyWp5jcXockbxdk5kFRkbeXWm4Fbi9FrdN381sA==}
+    dev: false
+
   /@motionone/animation/10.15.1:
     resolution: {integrity: sha512-mZcJxLjHor+bhcPuIFErMDNyrdb2vJur8lSfMCsuCB4UyV8ILZLvK+t+pg56erv8ud9xQGK/1OGPt10agPrCyQ==}
     dependencies:
@@ -1220,6 +1228,13 @@ packages:
       tslib: 2.4.1
     dev: false
 
+  /@motionone/svelte/10.15.5:
+    resolution: {integrity: sha512-Xyxtgp7BlVnSBwcoFmXGHUVnpNktzeXsEifu2NJJWc7VGuxutDsBZxNdz80qvpLIC5MeBa1wh7GGegZzTm1msg==}
+    dependencies:
+      '@motionone/dom': 10.15.5
+      tslib: 2.4.1
+    dev: false
+
   /@motionone/types/10.15.1:
     resolution: {integrity: sha512-iIUd/EgUsRZGrvW0jqdst8st7zKTzS9EsKkP+6c6n4MPZoQHwiHuVtTQLD6Kp0bsBLhNzKIBlHXponn/SDT4hA==}
     dev: false
@@ -1229,6 +1244,13 @@ packages:
     dependencies:
       '@motionone/types': 10.15.1
       hey-listen: 1.0.8
+      tslib: 2.4.1
+    dev: false
+
+  /@motionone/vue/10.15.5:
+    resolution: {integrity: sha512-cUENrLYAolUacHvCgU+8wF9OgSlVutfWbHMLERI/bElCJ+e2YVQvG/CpGhIM5fYOOJzuvg2T2wHmLLmvJoavEw==}
+    dependencies:
+      '@motionone/dom': 10.15.5
       tslib: 2.4.1
     dev: false
 
@@ -2954,6 +2976,10 @@ packages:
     engines: {node: '>= 0.6'}
     dev: false
 
+  /eventemitter3/3.1.2:
+    resolution: {integrity: sha512-tvtQIeLVHjDkJYnzf2dgVMxfuSGJeM/7UCG17TT4EumTfNtF+0nebF/4zWOIkCreAbtNqhGEboB6BWrwqNaw4Q==}
+    dev: false
+
   /expand-tilde/2.0.2:
     resolution: {integrity: sha512-A5EmesHW6rfnZ9ysHQjPdJRni0SRar0tjtG5MNtm9n5TUvsYU8oozprtRD4AqHxcZWWlVuAmQo2nWKfN9oyjTw==}
     engines: {node: '>=0.10.0'}
@@ -3107,6 +3133,10 @@ packages:
     resolution: {integrity: sha512-5nqDSxl8nn5BSNxyR3n4I6eDmbolI6WT+QqR547RwxQapgjQBmtktdP+HTBb/a/zLsbzERTONyUB5pefh5TtjQ==}
     dev: false
 
+  /fontfaceobserver/2.3.0:
+    resolution: {integrity: sha512-6FPvD/IVyT4ZlNe7Wcn5Fb/4ChigpucKYSvD6a+0iMoLn2inpo711eyIcKjmDtE5XNcgAkSH9uN/nfAeZzHEfg==}
+    dev: false
+
   /for-each/0.3.3:
     resolution: {integrity: sha512-jqYfLp7mo9vIyQf8ykW2v7A+2N4QjeCeI5+Dz9XraiO1ign81wjiH7Fb9vSOWvQfNtmSa4H2RoQTrrXivdUZmw==}
     dependencies:
@@ -3146,6 +3176,23 @@ packages:
       tslib: 2.4.1
     optionalDependencies:
       '@emotion/is-prop-valid': 0.8.8
+    dev: false
+
+  /framer/2.2.1_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-X8adaBg2ARufBUlNPXyICjco2lYNTfHUXc8Nx1N3/KZUCKlulgS0GkZjXH9rOJ4f9XcNwSVzXN9t1GNqTY9JDQ==}
+    requiresBuild: true
+    peerDependencies:
+      framer-motion: ^6.3.1
+      react: ^18.0.0
+      react-dom: ^18.0.0
+    dependencies:
+      '@juggle/resize-observer': 3.4.0
+      eventemitter3: 3.1.2
+      fontfaceobserver: 2.3.0
+      hoist-non-react-statics: 3.3.2
+      hsluv: 0.0.3
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
     dev: false
 
   /fresh/0.5.2:
@@ -3417,6 +3464,10 @@ packages:
     engines: {node: '>=0.10.0'}
     dependencies:
       parse-passwd: 1.0.0
+    dev: false
+
+  /hsluv/0.0.3:
+    resolution: {integrity: sha512-08iL2VyCRbkQKBySkSh6m8zMUa3sADAxGVWs3Z1aPcUkTJeK0ETG4Fc27tEmQBGUAXZjIsXOZqBvacuVNSC/fQ==}
     dev: false
 
   /http-errors/2.0.0:
@@ -3860,8 +3911,8 @@ packages:
       yallist: 4.0.0
     dev: false
 
-  /lucy-nxtjs/0.0.12_fzm4xuxumdv242e5mmtnshytga:
-    resolution: {integrity: sha512-mKBML6drIvAl9M3vbwI/GN7BRNIxsyINT7BY3Q51OzgiSkzG/MeFy4rD6dumK4LmUIAXtFND/TkzOndfIxP7CQ==}
+  /lucy-nxtjs/0.0.13_fzm4xuxumdv242e5mmtnshytga:
+    resolution: {integrity: sha512-2aIm8YowwfDWX1ulOdv4fjT71HCau00H+lBY+EK6HMprsN+vueBLsrEHLAQjm2NcBCVm6FYQLd0+AWXF25U+jQ==}
     peerDependencies:
       '@emotion/react': ^11.10.5
       '@emotion/styled': ^11.10.5
@@ -4036,6 +4087,17 @@ packages:
     transitivePeerDependencies:
       - aws-crt
       - supports-color
+    dev: false
+
+  /motion/10.15.5:
+    resolution: {integrity: sha512-ejP6KioN4pigTGxL93APzOnvtLklParL59UQB2T3HWXQBxFcIp5/7YXFmkgiA6pNKKzjvnLhnonRBN5iSFMnNw==}
+    dependencies:
+      '@motionone/animation': 10.15.1
+      '@motionone/dom': 10.15.5
+      '@motionone/svelte': 10.15.5
+      '@motionone/types': 10.15.1
+      '@motionone/utils': 10.15.1
+      '@motionone/vue': 10.15.5
     dev: false
 
   /mpath/0.9.0:

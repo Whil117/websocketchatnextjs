@@ -12,25 +12,17 @@ const LayoutChat: FC<Props> = (props) => {
   return (
     <AuthContextUser>
       <AtomWrapper
-        width="100%"
-        height="100vh"
-        flexDirection="row"
-        flexWrap="nowrap"
-        backgroundColor="#424242"
-        gap="2.5px"
         customCSS={css`
           display: grid;
-          grid-template-columns: 360px 1fr;
-          @media (max-width: 980px) {
-            grid-template-columns: 1fr;
-          }
+          grid-template-columns: 320px 1fr;
         `}
       >
         <ComponentLayoutChats />
         <AtomWrapper
           width="100%"
-          height="100vh"
-          backgroundColor="var(--background-color-secondary)"
+          customCSS={css`
+            overflow: hidden;
+          `}
         >
           {props?.children}
         </AtomWrapper>
