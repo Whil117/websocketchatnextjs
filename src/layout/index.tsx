@@ -14,7 +14,7 @@ export type PropsLayout = {
   type: keyof typeof Layouts;
 };
 const LayoutFC: FC<PropsLayout> = (props) => {
-  const Component = Layouts[props?.type];
+  const Component = Layouts[props?.type ?? "public"];
   return <Component {...props}> {props?.children}</Component>;
 };
 
