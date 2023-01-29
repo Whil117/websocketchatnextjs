@@ -31,46 +31,30 @@ const ChatById: NextPageFC = () => {
   );
   const { subscribeToMore, data } = query;
 
-  const [subscription, setSubscription] = useState<any>(null);
-
   useEffect(() => {
-    if (subscription) {
-      subscription();
-    }
-
-    setSubscription(
-      subscribeToMore({
-        document: SUBSCRIBE_MESSAGE_CHAT,
-        variables: {
-          input: {
-            id: chatId,
+    subscribeToMore({
+      document: SUBSCRIBE_MESSAGE_CHAT,
+      variables: {
+        input: {
+          id: chatId,
+        },
+      },
+      updateQuery: (prev, { subscriptionData }: any) => {
+        if (!subscriptionData.data) return prev;
+        const newMessage = subscriptionData.data?.postCreated;
+        const result = Object.assign({}, prev, {
+          listMessagesByChatUser: {
+            ...prev.listMessagesByChatUser,
+            items: [newMessage, ...(prev?.listMessagesByChatUser?.items ?? [])],
           },
-        },
-        updateQuery: (prev, { subscriptionData }: any) => {
-          if (!subscriptionData.data) return prev;
-          const newMessage = subscriptionData.data?.postCreated;
-          const result = Object.assign({}, prev, {
-            listMessagesByChatUser: {
-              ...prev.listMessagesByChatUser,
-              items: [
-                newMessage,
-                ...(prev?.listMessagesByChatUser?.items ?? []),
-              ],
-            },
-          });
+        });
 
-          return result;
-        },
-      })
-    );
+        return result;
+      },
+    });
 
-    return () => {
-      if (subscription) {
-        subscription();
-      }
-    };
+    return () => {};
   }, [chatId]);
-  console.log(data);
 
   const messages = [...(data?.listMessagesByChatUser?.items ?? [])]?.reverse();
 
