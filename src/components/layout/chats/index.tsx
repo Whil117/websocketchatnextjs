@@ -35,6 +35,11 @@ const ComponentLayoutChats: FC<Props> = () => {
       padding="20px"
       justifyContent="flex-start"
       gap="20px"
+      customCSS={css`
+        @media (max-width: 980px) {
+          display: none;
+        }
+      `}
     >
       <AtomWrapper
         flexDirection="row"

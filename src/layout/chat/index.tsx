@@ -16,6 +16,9 @@ const LayoutChat: FC<Props> = (props) => {
         customCSS={css`
           display: grid;
           grid-template-columns: 60px 320px 1fr;
+          @media (max-width: 980px) {
+            grid-template-columns: 1fr;
+          }
         `}
       >
         <MiniSidebarPage />

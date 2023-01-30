@@ -16,6 +16,11 @@ const MiniSidebarPage: FC<Props> = () => {
       alignItems="center"
       justifyContent="space-between"
       padding="20px 10px"
+      customCSS={css`
+        @media (max-width: 980px) {
+          display: none;
+        }
+      `}
     >
       <AtomIcon
         src="https://res.cloudinary.com/whil/image/upload/v1675014649/message-text_y2pedv.svg"
