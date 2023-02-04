@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { MUTATE_CREATE_MESSAGE_CHAT } from "@/apollo/mutate/chat";
 import exportReduceWithAtom from "@/jotai/reducers/user";
 import { useMutation } from "@apollo/client";
@@ -38,6 +39,7 @@ const SendMessage: FC<Props> = () => {
       resetForm();
     },
   });
+
   return (
     <>
       <AtomInput
