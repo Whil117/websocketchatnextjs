@@ -9,7 +9,7 @@ import { useQuery, useSubscription } from "@apollo/client";
 import { css } from "@emotion/react";
 import { AtomImage, AtomText, AtomWrapper } from "lucy-nxtjs";
 import { useRouter } from "next/router";
-import { FC, ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import { FC, ReactNode, useEffect, useRef, useState } from "react";
 
 type Props = {
   children?: ReactNode;
@@ -40,7 +40,6 @@ const ListMessages: FC<Props> = () => {
 
   useSubscription<ISubscriptionFilter<"postCreated">>(SUBSCRIBE_MESSAGE_CHAT, {
     skip: !chatId,
-
     variables: {
       input: {
         id: chatId,
@@ -54,20 +53,20 @@ const ListMessages: FC<Props> = () => {
     },
   });
 
-  const messages = useMemo(
-    () => query?.data?.listMessagesByChatUser?.items?.concat(newMessages),
-    [query.data?.listMessagesByChatUser?.items, newMessages]
-  );
+  const messages = query.data?.listMessagesByChatUser?.items;
 
-  useEffect(() => setNewMessages([]), [chatId]);
+  useEffect(() => {
+    setNewMessages([]);
+    query?.refetch();
+  }, [chatId, query]);
 
   useEffect(() => {
     if (chatScroll.current && page === 1) {
       chatScroll.current.scrollTop = chatScroll.current.scrollHeight;
     }
-  }, [messages, page]);
+  }, [messages, page, newMessages]);
 
-  console.log({ messages });
+  console.log({ newMessages });
   return (
     <AtomWrapper
       ref={chatScroll}
@@ -95,7 +94,41 @@ const ListMessages: FC<Props> = () => {
         }
       `}
     >
-      {[...(messages?.reverse() ?? [])]?.map((item) => (
+      {query.data?.listMessagesByChatUser?.items?.map((item) => (
+        <AtomWrapper
+          height="auto"
+          key={item?.id}
+          customCSS={css`
+            padding: 10px 10px;
+            gap: 10px;
+            &:hover {
+              background-color: var(--background-color-tertiary);
+            }
+            display: grid;
+            grid-template-columns: 50px 1fr;
+          `}
+        >
+          <AtomImage
+            src={item?.user?.image as string}
+            width="50px"
+            height="50px"
+          />
+          <AtomWrapper>
+            <AtomText>{item?.user?.fullName}</AtomText>
+            <AtomText
+              customCSS={css`
+                overflow: hidden;
+                text-overflow: Ellipsis;
+                word-wrap: break-word;
+                cursor: text;
+              `}
+            >
+              {item?.message}
+            </AtomText>
+          </AtomWrapper>
+        </AtomWrapper>
+      ))}
+      {newMessages?.map((item) => (
         <AtomWrapper
           height="auto"
           key={item?.id}

@@ -53,7 +53,7 @@ const SendMessage: FC<Props> = () => {
             formik.submitForm();
           }
         }}
-        customCSS={css`
+        customCSS={() => css`
           textarea {
             ::-webkit-scrollbar {
               width: 6px;
