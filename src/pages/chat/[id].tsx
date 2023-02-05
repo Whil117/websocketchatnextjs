@@ -21,44 +21,45 @@ const ChatById: NextPageFC = () => {
         flex: 1;
       `}
     >
-      <HeaderChat />
-      <ListMessages />
-      <AtomWrapper
-        height="auto"
-        customCSS={css`
-          padding: 12px;
-        `}
-      >
-        {page !== 1 && (
-          <AtomButton
-            borderRadius="10px 10px 0px 0px"
-            width="100%"
-            margin="5px"
-            backgroundLinearGradient={{
-              rotate: "315deg",
-              secondary: "#07deff",
-              primary: "#0f97ff",
-            }}
-            whileHover={{
-              scale: 1,
-            }}
-            whileTap={{
-              scale: 0.99,
-            }}
-            onClick={() => {
-              setPage(1);
-              if (chatScroll.current) {
-                chatScroll.current.scrollTop =
-                  chatScroll.current.scrollHeight - 40;
-              }
-            }}
-          >
-            You're viewing older messages Jump To Present <br />
-            page {page}
-          </AtomButton>
-        )}
-        <SendMessage />
-      </AtomWrapper>
+      <HeaderChat>
+        <ListMessages />
+        <AtomWrapper
+          height="auto"
+          customCSS={css`
+            padding: 12px;
+          `}
+        >
+          {page !== 1 && (
+            <AtomButton
+              borderRadius="10px 10px 0px 0px"
+              width="100%"
+              margin="5px"
+              backgroundLinearGradient={{
+                rotate: "315deg",
+                secondary: "#07deff",
+                primary: "#0f97ff",
+              }}
+              whileHover={{
+                scale: 1,
+              }}
+              whileTap={{
+                scale: 0.99,
+              }}
+              onClick={() => {
+                setPage(1);
+                if (chatScroll.current) {
+                  chatScroll.current.scrollTop =
+                    chatScroll.current.scrollHeight - 40;
+                }
+              }}
+            >
+              You're viewing older messages Jump To Present <br />
+              page {page}
+            </AtomButton>
+          )}
+          <SendMessage />
+        </AtomWrapper>
+      </HeaderChat>
     </AtomWrapper>
   );
 };

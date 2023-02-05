@@ -65,9 +65,6 @@ const ListMessages: FC<Props> = () => {
       chatScroll.current.scrollTop = chatScroll.current.scrollHeight;
     }
   }, [messages, page, newMessages]);
-  console.log({
-    newMessages,
-  });
 
   return (
     <AtomWrapper
@@ -79,6 +76,7 @@ const ListMessages: FC<Props> = () => {
         overflow-x: hidden;
         overflow-y: scroll;
         flex-direction: column;
+        justify-content: flex-start;
         flex-wrap: nowrap;
         flex: 1;
         padding: 12px;

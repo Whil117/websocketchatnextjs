@@ -24,7 +24,7 @@ specifiers:
   graphql-ws: ^5.11.2
   jotai: ^1.13.1
   js-cookie: ^3.0.1
-  lucy-nxtjs: 0.0.15
+  lucy-nxtjs: 0.0.16
   mongoose: ^6.8.4
   motion: ^10.15.5
   net: ^1.0.2
@@ -62,7 +62,7 @@ dependencies:
   graphql-ws: 5.11.2_graphql@16.6.0
   jotai: 1.13.1_react@18.2.0
   js-cookie: 3.0.1
-  lucy-nxtjs: 0.0.15_fzm4xuxumdv242e5mmtnshytga
+  lucy-nxtjs: 0.0.16_fzm4xuxumdv242e5mmtnshytga
   mongoose: 6.8.4
   motion: 10.15.5
   net: 1.0.2
@@ -4184,8 +4184,8 @@ packages:
       yallist: 4.0.0
     dev: false
 
-  /lucy-nxtjs/0.0.15_fzm4xuxumdv242e5mmtnshytga:
-    resolution: {integrity: sha512-Sn/3XHGcotg1XuPF6q7zdJWHk9PXJp3PHSUix7fSUcZdWgp7pNwF0coRgtBOBh9C86jFuGEtFEDMfbM51FmnJw==}
+  /lucy-nxtjs/0.0.16_fzm4xuxumdv242e5mmtnshytga:
+    resolution: {integrity: sha512-KxjyUeCV06y4M6/5QrdjuBNaVS+4dWURKr3znFsSsSpRrmGO32qDg/uhI4WErWqi+ery6bmbiaSWJMqqiI8nqQ==}
     peerDependencies:
       '@emotion/react': ^11.10.5
       '@emotion/styled': ^11.10.5
