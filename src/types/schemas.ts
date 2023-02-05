@@ -13,22 +13,15 @@ import { GraphQLResolveInfo } from 'graphql';
  *                             *
  *******************************/
 export interface IQuery {
+  chatByIdConversation?: IChatByUserItem;
   listChatByUser?: IListChatsByUser;
   listMessagesByChatUser?: IListMessagesChatUser;
   listUsers?: IListUsersPaginated;
   me?: IUserItem;
 }
 
-export interface IInputFilterListChatUsers {
-  userId?: string;
-  page?: number;
-  take?: number;
-}
-
-export interface IListChatsByUser {
-  items?: Array<IChatByUserItem | null>;
-  totalCount?: number;
-  pageInfo?: IPaginationQuery;
+export interface IFilterChatByIdConversation {
+  conversationId: string;
 }
 
 export interface IChatByUserItem {
@@ -45,6 +38,18 @@ export interface IUserItem {
   age?: number;
   email?: string;
   fullName?: string;
+}
+
+export interface IInputFilterListChatUsers {
+  userId?: string;
+  page?: number;
+  take?: number;
+}
+
+export interface IListChatsByUser {
+  items?: Array<IChatByUserItem | null>;
+  totalCount?: number;
+  pageInfo?: IPaginationQuery;
 }
 
 export interface IPaginationQuery {
@@ -164,9 +169,9 @@ export interface IMessageItem {
  */
 export interface IResolver {
   Query?: IQueryTypeResolver;
-  ListChatsByUser?: IListChatsByUserTypeResolver;
   ChatByUserItem?: IChatByUserItemTypeResolver;
   UserItem?: IUserItemTypeResolver;
+  ListChatsByUser?: IListChatsByUserTypeResolver;
   PaginationQuery?: IPaginationQueryTypeResolver;
   ListMessagesChatUser?: IListMessagesChatUserTypeResolver;
   MessageChatConversation?: IMessageChatConversationTypeResolver;
@@ -177,10 +182,18 @@ export interface IResolver {
   MessageItem?: IMessageItemTypeResolver;
 }
 export interface IQueryTypeResolver<TParent = any> {
+  chatByIdConversation?: QueryToChatByIdConversationResolver<TParent>;
   listChatByUser?: QueryToListChatByUserResolver<TParent>;
   listMessagesByChatUser?: QueryToListMessagesByChatUserResolver<TParent>;
   listUsers?: QueryToListUsersResolver<TParent>;
   me?: QueryToMeResolver<TParent>;
+}
+
+export interface QueryToChatByIdConversationArgs {
+  filter?: IFilterChatByIdConversation;
+}
+export interface QueryToChatByIdConversationResolver<TParent = any, TResult = any> {
+  (parent: TParent, args: QueryToChatByIdConversationArgs, context: any, info: GraphQLResolveInfo): TResult;
 }
 
 export interface QueryToListChatByUserArgs {
@@ -205,24 +218,6 @@ export interface QueryToListUsersResolver<TParent = any, TResult = any> {
 }
 
 export interface QueryToMeResolver<TParent = any, TResult = any> {
-  (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
-}
-
-export interface IListChatsByUserTypeResolver<TParent = any> {
-  items?: ListChatsByUserToItemsResolver<TParent>;
-  totalCount?: ListChatsByUserToTotalCountResolver<TParent>;
-  pageInfo?: ListChatsByUserToPageInfoResolver<TParent>;
-}
-
-export interface ListChatsByUserToItemsResolver<TParent = any, TResult = any> {
-  (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
-}
-
-export interface ListChatsByUserToTotalCountResolver<TParent = any, TResult = any> {
-  (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
-}
-
-export interface ListChatsByUserToPageInfoResolver<TParent = any, TResult = any> {
   (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
 }
 
@@ -279,6 +274,24 @@ export interface UserItemToEmailResolver<TParent = any, TResult = any> {
 }
 
 export interface UserItemToFullNameResolver<TParent = any, TResult = any> {
+  (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
+}
+
+export interface IListChatsByUserTypeResolver<TParent = any> {
+  items?: ListChatsByUserToItemsResolver<TParent>;
+  totalCount?: ListChatsByUserToTotalCountResolver<TParent>;
+  pageInfo?: ListChatsByUserToPageInfoResolver<TParent>;
+}
+
+export interface ListChatsByUserToItemsResolver<TParent = any, TResult = any> {
+  (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
+}
+
+export interface ListChatsByUserToTotalCountResolver<TParent = any, TResult = any> {
+  (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
+}
+
+export interface ListChatsByUserToPageInfoResolver<TParent = any, TResult = any> {
   (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
 }
 

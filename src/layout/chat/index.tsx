@@ -26,6 +26,7 @@ const LayoutChat: FC<Props> = (props) => {
         <AtomWrapper
           width="100%"
           customCSS={css`
+            flex: 1;
             overflow: hidden;
           `}
         >

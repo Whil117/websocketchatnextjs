@@ -9,6 +9,7 @@ export const SUBSCRIBE_MESSAGE_CHAT = gql`
         lastName
         image
         id
+        fullName
         age
       }
       message
