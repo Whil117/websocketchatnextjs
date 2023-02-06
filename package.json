@@ -32,7 +32,7 @@
     "graphql-ws": "^5.11.2",
     "jotai": "^1.13.1",
     "js-cookie": "^3.0.1",
-    "lucy-nxtjs": "0.0.16",
+    "lucy-nxtjs": "0.0.17",
     "mongoose": "^6.8.4",
     "motion": "^10.15.5",
     "net": "^1.0.2",

@@ -23,24 +23,31 @@ const MiniSidebarPage: FC<Props> = () => {
       `}
     >
       <AtomWrapper height="auto">
-        <AtomWrapper width="3px" height="auto" backgroundColor="#07deff">
-          <AtomIcon
-            src="https://res.cloudinary.com/whil/image/upload/v1675014649/message-text_y2pedv.svg"
-            color="default"
-            width="30px"
-            height="30px"
-            customCSS={css`
-              display: flex;
-              padding: 3px;
+        <AtomIcon
+          src="https://res.cloudinary.com/whil/image/upload/v1675014649/message-text_y2pedv.svg"
+          color="default"
+          width="30px"
+          height="30px"
+          customCSS={css`
+            display: flex;
+            padding: 3px;
+            &:hover {
+              border-left: 1px solid #07deff;
               svg {
                 padding: 2px;
                 path {
                   stroke: white;
                 }
               }
-            `}
-          />
-        </AtomWrapper>
+            }
+            svg {
+              padding: 2px;
+              path {
+                stroke: white;
+              }
+            }
+          `}
+        />
       </AtomWrapper>
       <AtomImage
         src={user?.image as string}
